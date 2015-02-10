@@ -1,0 +1,22 @@
+[
+{
+	"name": "A",
+	"max_size": {"unit":"MB", "value": 1000},
+	"affiliation":"Indiana University"
+},
+{
+	"name": "B",
+	"max_size": {"unit":"MB", "value": 2000},
+	"affiliation":"UIUC"
+},
+{
+	"name": "C",
+	"max_size": {"unit":"MB", "value": 2500},
+	"affiliation":"UMich"
+},
+{
+	"name": "D",
+	"max_size": {"unit":"MB", "value": 3000},
+	"affiliation":"Columbia University"
+}
+]

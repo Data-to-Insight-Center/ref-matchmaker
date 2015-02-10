@@ -1,0 +1,26 @@
+package edu.indiana.d2i.sead.matchmaker.ruleset1
+ 
+import edu.indiana.d2i.sead.matchmaker.core.*
+import java.util.Set
+import java.util.HashSet
+import java.util.Iterator
+import edu.indiana.d2i.sead.matchmaker.pojo.*;
+import edu.indiana.d2i.sead.matchmaker.custom.ruleset1.*;
+
+
+rule "file size"
+	when
+		
+		repo: Repository()
+		researchObject : ResearchObject()
+		Ruleset1Utility(computeBinaryUnitConverter(repo.maxSize.unit)*repo.maxSize.value < computeBinaryUnitConverter(researchObject.contentSize.unit)*researchObject.contentSize.value)
+		mml: MatchMakingList()
+	then
+		System.out.println( " Repo " +repo.getName()+" not allowed (File Size Restriction)");
+		Set<String> notAllowedList= new HashSet<String>();
+		notAllowedList.add(repo.getName());
+		mml.notAllowed(notAllowedList);
+		mml.printCandidateList();
+		
+end
+

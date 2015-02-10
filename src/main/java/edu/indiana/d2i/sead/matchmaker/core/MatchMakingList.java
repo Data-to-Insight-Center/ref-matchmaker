@@ -8,7 +8,9 @@ import java.util.Set;
 import java.util.function.BiFunction;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 
 public class MatchMakingList {
@@ -23,31 +25,17 @@ public class MatchMakingList {
 	/*
 	 * Initiate candidateList, add all repositories.
 	 * */
-	public MatchMakingList(){
+	public MatchMakingList(ArrayNode repositories){
 		this.candidateList = new HashMap<String, HashMap<String, Integer>>();
 				
-		//TODO: read all repo name from a catalog
-		HashMap<String, Integer> paramsA = new HashMap<String, Integer>();
-		paramsA.put("priority", PRIORITY_DEFAULT);
-		paramsA.put("weight", WEIGHT_DEFAULT);
-		HashMap<String, Integer> paramsB = new HashMap<String, Integer>();
-		paramsB.put("priority", PRIORITY_DEFAULT);
-		paramsB.put("weight", WEIGHT_DEFAULT);
-		HashMap<String, Integer> paramsC = new HashMap<String, Integer>();
-		paramsC.put("priority", PRIORITY_DEFAULT);
-		paramsC.put("weight", WEIGHT_DEFAULT);
-		HashMap<String, Integer> paramsD = new HashMap<String, Integer>();
-		paramsD.put("priority", PRIORITY_DEFAULT);
-		paramsD.put("weight", WEIGHT_DEFAULT);
-		HashMap<String, Integer> paramsE = new HashMap<String, Integer>();
-		paramsE.put("priority", PRIORITY_DEFAULT);
-		paramsE.put("weight", WEIGHT_DEFAULT);
-		
-		this.candidateList.put("A", paramsA);
-		this.candidateList.put("B", paramsB);
-		this.candidateList.put("C", paramsC);
-		this.candidateList.put("D", paramsD);
-		this.candidateList.put("E", paramsE);
+		for (JsonNode repo : repositories ){
+			HashMap<String, Integer> params = new HashMap<String, Integer>();
+			params.put("priority", PRIORITY_DEFAULT);
+			params.put("weight", WEIGHT_DEFAULT);
+			this.candidateList.put(repo.path("name").asText(),params);
+			//System.out.println(repo.toString());
+		}
+
 	}
 	
 	/*
@@ -119,7 +107,7 @@ public class MatchMakingList {
 		ObjectMapper mapper = new ObjectMapper();
         String matchmaking;
 		try {
-			matchmaking = mapper.writeValueAsString(this.candidateList);
+			matchmaking = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.candidateList);
 			System.out.println(matchmaking);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -128,11 +116,13 @@ public class MatchMakingList {
 		
 	}
 
-	public static void main(String[] args) throws JsonProcessingException {
+	public static void main(String[] args) throws JsonProcessingException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		MatchMakingList mml= new MatchMakingList();
 		
-		mml.addWeight("B",3);
+		POJOGenerator reposGen = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.Repository");
+    	reposGen.fromPath("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\profile\\repositories.json");
+    	MatchMakingList mml=new MatchMakingList((ArrayNode)reposGen.getJsonTree());
+        mml.addWeight("B",3);
 		mml.printCandidateList();
 		mml.reduceWeight("B",1);
 		mml.printCandidateList();
@@ -154,10 +144,7 @@ public class MatchMakingList {
 		preferredList.add("B");
 		mml.preferred(preferredList);
 		mml.printCandidateList();
-		
-		
-		
-		
+	
 	}
 
 }
