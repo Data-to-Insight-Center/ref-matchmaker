@@ -15,9 +15,10 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 
 public class MatchMakingList {
 	
-	int PRIORITY_DEFAULT=0;
-	int PRIORITY_PREFERRED=1;
-	int WEIGHT_DEFAULT=0;
+	protected int PRIORITY_DEFAULT;
+	protected int PRIORITY_PREFERRED;
+	protected int WEIGHT_DEFAULT;
+	protected String PRIMARY_KEY;
 	//String MatchmakingSchema ="{\"priority\":\"Integer\", \"weight\":\"Integer\"}";
 	
 	private HashMap<String, HashMap<String, Integer>> candidateList;
@@ -26,16 +27,23 @@ public class MatchMakingList {
 	 * Initiate candidateList, add all repositories.
 	 * */
 	public MatchMakingList(ArrayNode repositories){
+		init();
 		this.candidateList = new HashMap<String, HashMap<String, Integer>>();
-				
 		for (JsonNode repo : repositories ){
 			HashMap<String, Integer> params = new HashMap<String, Integer>();
 			params.put("priority", PRIORITY_DEFAULT);
 			params.put("weight", WEIGHT_DEFAULT);
-			this.candidateList.put(repo.path("name").asText(),params);
+			this.candidateList.put(repo.path(PRIMARY_KEY).asText(),params);
 			//System.out.println(repo.toString());
 		}
-
+	}
+	
+	public void init(){
+		this.PRIMARY_KEY="name";
+		this.PRIORITY_DEFAULT=0;
+		this.PRIORITY_PREFERRED=1;
+		this.WEIGHT_DEFAULT=0;
+		
 	}
 	
 	/*

@@ -6,7 +6,9 @@
   <groupId>edu.indiana.d2i.sead</groupId>
   <artifactId>matchmaker</artifactId>
   <version>1.0.0</version>
-
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+  </build>
   <dependencies>
     <dependency>
 		<groupId>org.drools</groupId>

@@ -11,10 +11,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.POJONode;
 
-import edu.indiana.d2i.sead.matchmaker.pojo.Repository;
 
 public class POJOGenerator {
 	
@@ -97,7 +94,7 @@ public class POJOGenerator {
 		
 		if(this.jsonTree.isArray()){
 			ArrayNode jarray=(ArrayNode)this.jsonTree;
-			Object[] objs=new edu.indiana.d2i.sead.matchmaker.pojo.Repository[jarray.size()];
+			Object[] objs=new Object[jarray.size()];
 			for (int i=0;i<jarray.size();i++){
 				objs[i]=mapper.readValue(jarray.get(i).toString(), this.pojo);
 			}

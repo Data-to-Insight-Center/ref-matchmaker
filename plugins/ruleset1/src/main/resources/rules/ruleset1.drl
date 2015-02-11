@@ -13,14 +13,27 @@ rule "file size"
 		
 		repo: Repository()
 		researchObject : ResearchObject()
-		Ruleset1Utility(computeBinaryUnitConverter(repo.maxSize.unit)*repo.maxSize.value < computeBinaryUnitConverter(researchObject.contentSize.unit)*researchObject.contentSize.value)
-		mml: MatchMakingList()
+		Ruleset1Utility(computeBinaryUnitConverter(repo.MaxFileSize.unit)*repo.MaxFileSize.value < computeBinaryUnitConverter(researchObject.fileSize.unit)*researchObject.fileSize.value)
+		mml: Ruleset1MatchMakingList()
 	then
-		System.out.println( " Repo " +repo.getName()+" not allowed (File Size Restriction)");
+		System.out.println( " Repo " +repo.getRepositoryName()+" not allowed (File Size Restriction)");
 		Set<String> notAllowedList= new HashSet<String>();
-		notAllowedList.add(repo.getName());
+		notAllowedList.add(repo.getRepositoryName());
 		mml.notAllowed(notAllowedList);
 		mml.printCandidateList();
 		
 end
 
+rule "file type"
+	when
+		repo: Repository()
+		not ResearchObject(repo.contentType contains contentType ||repo.contentType contains "any")
+		mml: Ruleset1MatchMakingList()
+	then
+		System.out.println( " Repo " +repo.getRepositoryName()+" not allowed (File Type Restriction)");
+		Set<String> notAllowedList= new HashSet<String>();
+		notAllowedList.add(repo.getRepositoryName());
+		mml.notAllowed(notAllowedList);
+		mml.printCandidateList();
+end
+//

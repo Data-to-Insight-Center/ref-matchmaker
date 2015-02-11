@@ -9,6 +9,11 @@
   
 
   <dependencies>
+     <dependency> 
+		<groupId>edu.indiana.d2i.sead</groupId>
+		<artifactId>matchmaker</artifactId>
+		<version>1.0.0</version>
+	</dependency>
     <dependency>
 		<groupId>org.drools</groupId>
 		<artifactId>drools-compiler</artifactId>
