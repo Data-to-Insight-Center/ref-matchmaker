@@ -1,21 +1,33 @@
-# matchmaker
-For SEAD 2.0
+MatchMaker
+===============
+Introduction
+-----------------
+Matchmaker is a standalone service that continuously reads all the preferences and constraints and targeted entities, matching and ranking targeted entities that satisfies the preferences and constraints.
 
-Rules invokes the following Java methods. The order of rules will have no impacted to the final result, therefore, ease the burden of rule creation/verification.
-~~~
-restrict()
-notAllowed()
-preferred()
-setWeight()
-addWeight()
-reduceWeight()
-~~~
+Motivating Use Case
+-----------------
+The Matchmaker is used in the SEAD Virtual Archive to dynamically determine the destination preservation repository for a published Research Object (RO). The Matchmaker takes as input the preferences and constraints of data producers/creators/authors (e.g., people) and the data centers/digital repositories, as well as formal rules that are executed by the JBoss Drools rule engine to find the optimum home for a deposited RO.  
 
-## Sample 1:
+Technical Highlights
+-----------------
+* Matchmaker dynamically loads 1) user requirements (in JSON) which generate java classes and instantiate POJOs without predefined schema, and 2) rules, and leverages Drools rule engine to make matchmaking decisions.
+
+* Rules invokes the following Java methods. The order of rules will have no impacted to the final result, therefore, ease the burden of rule creation/verification.
+~~~
+restrict() : Restrict candidate list to a given list.
+notAllowed(): Remove selected candidates from the candidate list.
+preferred(): Tag "preferred" to a list of candidates.
+setWeight(): Set weight to a candidate.
+addWeight(): Add weight to a candidate.
+reduceWeight(): Reduce weight to a candidate.
+~~~
+* The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full list.
+
+### Sample 1: Java Method Test
 ~~~
 Repositories: A, B, C, D, and E.
-ROs: TBD
-Persons: TBD
+ROs: N/A
+Persons: N/A
 ~~~
 The matchmaker makes the following initial candidate list:
 ~~~
@@ -35,5 +47,202 @@ Output: {"A":{"weight":0,"priority":0},"B":{"weight":2,"priority":0},"D":{"weigh
 Output: {"A":{"weight":0,"priority":0},"B":{"weight":2,"priority":0},"D":{"weight":0,"priority":0}}
 6) Rule: A, and B are preferred 
 Output: {"A":{"weight":0,"priority":1},"B":{"weight":2,"priority":1},"D":{"weight":0,"priority":0}}
+~~~
 
+### Sample 2: Preliminary SEAD Test
+1. Repositories/Person/RO: 
+* Repositories: 
+~~~
+[
+{
+  "@context": "http://re3data.org/",
+  "@type": "repository",
+  "orgidentifier": "http://doi.org/xxxxxxx",
+  "repositoryName": "IDEALS",
+  "repositoryURL": "https://www.ideals.illinois.edu/",
+  "institution": "University of Illinois",
+  "subject": "any",
+  "versioning": "no",
+  "dataAccessType": ["open","restricted"],
+  "dataLicenseName": ["other"],
+  "contentType": ["csv", "txt", "xml", "html", "tif", "jp2", "aif", "fla", "ogg", "wav", "avi", "mj2"],
+  "/maxFileSize": {"unit":"MB", "value": 1000}
+},
+
+{
+  "@context": "http://re3data.org/",
+  "@type": "repository",
+  "orgidentifier": "http://doi.org/xxxxxxx",
+  "repositoryName": "ICPSR",
+  "repositoryURL": "https://www.icpsr.umich.edu/icpsrweb/landing.jsp",
+  "institution": "University of Michigan",
+  "subject": "Social and Behavioral Sciences",
+  "versioning": "yes",
+  "dataAccessType": ["open","restricted"],
+  "dataLicenseName": ["other"],
+  "contentType": ["csv"],
+  "/maxFileSize": {"unit":"MB", "value": 2000}
+},
+
+{
+  "@context": "http://re3data.org/",
+  "@type": "repository",
+  "orgidentifier": "http://doi.org/xxxxxxx",
+  "repositoryName": "IU SDA",
+  "repositoryURL": "https://www.indiana.edu",
+  "institution": "Indiana University",
+  "subject": "any",
+  "versioning": "yes",
+  "dataAccessType": ["open","restricted"],
+  "dataLicenseName": ["other"],
+  "contentType": ["any"],
+  "/maxFileSize": {"unit":"MB", "value": 3000}
+},
+
+{
+  "@context": "http://re3data.org/",
+  "@type": "repository",
+  "orgidentifier": "http://doi.org/xxxxxxx",
+  "repositoryName": "D2I",
+  "repositoryURL": "https://www.d2i.indiana.edu",
+  "institution": "Indiana University D2I",
+  "subject": "any",
+  "versioning": "yes",
+  "dataAccessType": ["open","restricted"],
+  "dataLicenseName": ["other"],
+  "contentType": ["csv", "txt", "xml", "html", "tif"],
+  "/maxFileSize": {"unit":"MB", "value": 3000}
+}
+
+]
+~~~
+* RO:
+~~~
+{				
+  "@context": "http://schema.org/",				
+  "@type": "DataDownload",				
+  "name": "Debris Flow Flume",				
+  "description": "A 4-meter diameter, 80-cm wide rotating debris flow flume was constructed at the University of California Richmond Field Station for studying large-scale granular flow phenomena. This dataset covers the experiments conducted in 2007 and 2008, where the primary goal was to study rates and mechanisms of bedrock erosion by debris flows.",				
+  "sourceOrganization": "Columbia University",  				
+  "author": {				
+    "@type": "Person",				
+    "name": "Hsu, Leslie",				
+    "@id": "http://orcid.org/0000-0002-5353-807X",				
+    "email": "lhsu@ldeo.columbia.edu"				
+  },				
+  "fileSize": {"unit":"MB", "value": 2000},				
+  "contentUrl": "http://sead-vivo.d2i.indiana.edu:8080/sead-vivo/individual/n15603",				
+  "/subject": "Geophysics",	
+  "contentType"	: "tif"		
+}		
+~~~
+* Person:
+~~~
+{			
+  "@context": "http://schema.org/",			
+  "@type": "Person",			
+  "name": "Hsu, Leslie",			
+  "@id": "http://orcid.org/0000-0002-5353-807X",			
+  "affiliation": "Columbia University",			
+  "jobTitle": "Associate Research Scientist",			
+  "email": "lhsu@ldeo.columbia.edu",			
+  "URL": "https://sites.google.com/site/lhsu000001/",			
+  "codeRepository": "IDEALS"			
+}
+~~~
+Java source code are generated based on above json files. These Java code are then compiled into .class files and are loaded and instantiated to POJOs, which are fed to the Drools rule engine.
+
+2. Rules:
+~~~
+rule "file size"
+	when
+		
+		repo: Repository()
+		researchObject : ResearchObject()
+		Ruleset1Utility(computeBinaryUnitConverter(repo.MaxFileSize.unit)*repo.MaxFileSize.value < computeBinaryUnitConverter(researchObject.fileSize.unit)*researchObject.fileSize.value)
+		mml: Ruleset1MatchMakingList()
+	then
+		System.out.println( " Repo " +repo.getRepositoryName()+" not allowed (File Size Restriction)");
+		Set<String> notAllowedList= new HashSet<String>();
+		notAllowedList.add(repo.getRepositoryName());
+		mml.notAllowed(notAllowedList);
+		mml.printCandidateList();
+		
+end
+
+rule "file type"
+	when
+		repo: Repository()
+		not ResearchObject(repo.contentType contains contentType ||repo.contentType contains "any")
+		mml: Ruleset1MatchMakingList()
+	then
+		System.out.println( " Repo " +repo.getRepositoryName()+" not allowed (File Type Restriction)");
+		Set<String> notAllowedList= new HashSet<String>();
+		notAllowedList.add(repo.getRepositoryName());
+		mml.notAllowed(notAllowedList);
+		mml.printCandidateList();
+end
+~~~
+The matchmaker makes the following initial candidate list:
+~~~
+{
+  "IDEALS" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "ICPSR" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "IU SDA" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "D2I" : {
+    "weight" : 0,
+    "priority" : 0
+  }
+}
+~~~
+Fire All Rules...
+~~~
+ Repo IDEALS not allowed (File Size Restriction)
+{
+  "ICPSR" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "IU SDA" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "D2I" : {
+    "weight" : 0,
+    "priority" : 0
+  }
+}
+ Repo ICPSR not allowed (File Type Restriction)
+{
+  "IU SDA" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "D2I" : {
+    "weight" : 0,
+    "priority" : 0
+  }
+}
+======================
+Final Match:
+{
+  "IU SDA" : {
+    "weight" : 0,
+    "priority" : 0
+  },
+  "D2I" : {
+    "weight" : 0,
+    "priority" : 0
+  }
+}
+======================
 ~~~
