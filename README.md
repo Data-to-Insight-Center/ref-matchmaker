@@ -2,17 +2,18 @@ MatchMaker
 ===============
 Introduction
 -----------------
-Matchmaker is a standalone service that continuously reads all the preferences and constraints and targeted entities, matching and ranking targeted entities that satisfies the preferences and constraints.
+Matchmaker is a standalone service that continuously reads all the preferences and constraints and candidate entities, matching and ranking candidate entities that satisfies the preferences and constraints.
 
 Motivating Use Case
 -----------------
-The Matchmaker is used in the SEAD Virtual Archive to dynamically determine the destination preservation repository for a published Research Object (RO). The Matchmaker takes as input the preferences and constraints of data producers/creators/authors (e.g., people) and the data centers/digital repositories, as well as formal rules that are executed by the JBoss Drools rule engine to find the optimum home for a deposited RO.  
+The Matchmaker is used in the SEAD Virtual Archive to dynamically determine the destination preservation repository for a published Research Object (RO). The Matchmaker takes as input the preferences and constraints of data producers/creators/authors (e.g., people) and the data centers/digital repositories (JSON-LD format), as well as formal rules (Drools DRL format) that are executed by the JBoss Drools rule engine to find the optimum home for a deposited RO.  
 
-Technical Highlights
+Important Design Decisions
 -----------------
-* Matchmaker dynamically loads 1) user requirements (in JSON) which generate java classes and instantiate POJOs without predefined schema, and 2) rules, and leverages Drools rule engine to make matchmaking decisions.
-
-* Rules invokes the following Java methods. The order of rules will have no impacted to the final result, therefore, ease the burden of rule creation/verification.
+* Matchmaker leverages Drools rule engine to make matchmaking decisions.
+* Matchmaker has a plugin mechanism that allows new rules and associated java classes to be added.
+* Matchmaker does not restrict user input JSON schema. It generate POJO classes based on user input JSON files, compile to customized jar file along with user defined rules and associated java classes, and instantiate POJOs without predefined schema
+* The Drools rules adpot "when-then" logic. In Matchmaker, each rule invokes one or more of the following Java methods in the "then" statement to update the candidate list. The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full candidate list. Therefore, the order of rules will have no impact to the final result so that it ease the burden of rule creation/verification. New rules can be added independently, without looking back to the existing rules. 
 ~~~
 restrict() : Restrict candidate list to a given list.
 notAllowed(): Remove selected candidates from the candidate list.
@@ -21,7 +22,6 @@ setWeight(): Set weight to a candidate.
 addWeight(): Add weight to a candidate.
 reduceWeight(): Reduce weight to a candidate.
 ~~~
-* The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full list.
 
 ### Sample 1: Java Method Test
 ~~~
