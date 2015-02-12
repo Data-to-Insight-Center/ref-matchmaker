@@ -50,9 +50,9 @@ Output: {"A":{"weight":0,"priority":1},"B":{"weight":2,"priority":1},"D":{"weigh
 ~~~
 
 ### Sample 2: Preliminary SEAD Test
-1. Repositories/Person/RO: 
-* Repositories: 
+* Repositories/Person/RO: 
 ~~~
+* Repositories: 
 [
 {
   "@context": "http://re3data.org/",
@@ -115,9 +115,9 @@ Output: {"A":{"weight":0,"priority":1},"B":{"weight":2,"priority":1},"D":{"weigh
 }
 
 ]
-~~~
+
 * RO:
-~~~
+
 {				
   "@context": "http://schema.org/",				
   "@type": "DataDownload",				
@@ -135,9 +135,9 @@ Output: {"A":{"weight":0,"priority":1},"B":{"weight":2,"priority":1},"D":{"weigh
   "/subject": "Geophysics",	
   "contentType"	: "tif"		
 }		
-~~~
+
 * Person:
-~~~
+
 {			
   "@context": "http://schema.org/",			
   "@type": "Person",			
@@ -152,7 +152,7 @@ Output: {"A":{"weight":0,"priority":1},"B":{"weight":2,"priority":1},"D":{"weigh
 ~~~
 Java source code are generated based on above json files. These Java code are then compiled into .class files and are loaded and instantiated to POJOs, which are fed to the Drools rule engine.
 
-2. Rules:
+* Rules:
 ~~~
 rule "file size"
 	when
