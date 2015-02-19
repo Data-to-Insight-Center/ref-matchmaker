@@ -11,8 +11,8 @@ The Matchmaker is used in the SEAD Virtual Archive to dynamically determine the 
 Important Design Decisions
 -----------------
 * Matchmaker leverages Drools rule engine to make matchmaking decisions.
-* Matchmaker has a plugin mechanism that allows new rules and associated java classes to be added.
-* Matchmaker does not restrict user input JSON schema. It generate POJO classes based on user input JSON files, compile to customized jar file along with user defined rules and associated java classes, and instantiate POJOs without predefined schema
+* Matchmaker has a plugin mechanism that allows new rules and optionally associated helper java classes to be added.
+* Matchmaker does not restrict user input JSON-LD schema. It generate POJO classes based on user input JSON-LD files, compile to customized jar file along with user defined rules and associated helper java classes, and instantiate POJOs without pre-defined schema. However, if a JSON-LD schema is pre-defined, the matchmaker can generate POJO code and compile jar files offline, making matchmaking process much faster.
 * The Drools rules adpot "when-then" logic. In Matchmaker, each rule invokes one or more of the following Java methods in the "then" statement to update the candidate list. The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full candidate list. Therefore, the order of rules will have no impact to the final result so that it ease the burden of rule creation/verification. New rules can be added independently, without looking back to the existing rules. 
 ~~~
 restrict() : Restrict candidate list to a given list.
