@@ -12,7 +12,7 @@ Important Design Decisions
 -----------------
 * Matchmaker leverages Drools rule engine to make matchmaking decisions.
 * Matchmaker has a plugin mechanism that allows new rules and optionally associated helper java classes to be added.
-* Matchmaker does not restrict user input JSON-LD schema. It generate POJO classes based on user input JSON-LD files, compile to customized jar file along with user defined rules and associated helper java classes, and instantiate POJOs without pre-defined schema. However, if a JSON-LD schema is pre-defined, the matchmaker can generate POJO code and compile jar files offline, making matchmaking process much faster.
+* Matchmaker has no hardcoded keywords of any kind, nor does it restrict to a particular JSON-LD schema. It generates on-the-fly POJO classes source code based on user input JSON-LD files, compile to customized jar file along with user defined rules and associated helper java classes, and instantiate POJOs (based on JSON-LD files) without pre-defined schema. However, if a JSON-LD schema is pre-defined, Matchmaker can generate POJO code and compile jar files offline, and only instantiate POJO objects (based on JSON-LD files) at runtime, making matchmaking process much faster.
 * The Drools rules adpot "when-then" logic. In Matchmaker, each rule invokes one or more of the following Java methods in the "then" statement to update the candidate list. The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full candidate list. Therefore, the order of rules will have no impact to the final result so that it ease the burden of rule creation/verification. New rules can be added independently, without looking back to the existing rules. 
 ~~~
 restrict() : Restrict candidate list to a given list.
@@ -22,6 +22,18 @@ setWeight(): Set weight to a candidate.
 addWeight(): Add weight to a candidate.
 reduceWeight(): Reduce weight to a candidate.
 ~~~
+Rules
+-----------------
+A matchmaker rule is essentially a Drools rule. A basic Drools rule is as simple as below:
+~~~
+rule "name"
+    when
+        Left Hand Side(LHS)
+    then
+        Right Hand Side(RHS)
+end
+~~~
+LHS, operates on JavaBean(POJO) objects, is the conditional parts of the rule, which follows a certain syntax. RHS is basically a block that allows dialect specific semantic code to be executed, including java code.
 
 ### Sample 1: Java Method Test
 ~~~
