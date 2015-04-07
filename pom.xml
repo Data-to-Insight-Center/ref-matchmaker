@@ -10,6 +10,7 @@
     <sourceDirectory>src</sourceDirectory>
   </build>
   <dependencies>
+  <!-- core -->
     <dependency>
 		<groupId>org.drools</groupId>
 		<artifactId>drools-compiler</artifactId>
@@ -36,7 +37,43 @@
 		<version>0.4.7</version>
 	</dependency>
 
+	<!-- RESTful -->
+	<dependency>
+		<groupId>org.apache.cxf</groupId>
+		<artifactId>cxf-rt-frontend-jaxrs</artifactId>
+		<version>3.0.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-client</artifactId>
+			<version>3.0.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.cxf</groupId>
+		<artifactId>cxf-rt-transports-http-jetty</artifactId>
+		<version>3.0.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.4</version>
+	</dependency>
+	
+	<!-- RabbitMQ  -->
+	<dependency>
+		<groupId>com.rabbitmq</groupId>
+		<artifactId>amqp-client</artifactId>
+		<version>3.5.1</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.17</version>
+	</dependency>
+
+	
+
   </dependencies>
 
-  
 </project>

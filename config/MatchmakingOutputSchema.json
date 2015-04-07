@@ -1,0 +1,5 @@
+{
+	"success": boolean,
+	"message" : "String"
+
+}

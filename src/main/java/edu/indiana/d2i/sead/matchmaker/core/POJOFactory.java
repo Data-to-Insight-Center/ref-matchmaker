@@ -39,5 +39,8 @@ public class POJOFactory {
 		rootNode = mapper.readTree(new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\profile\\repositories.json"));
 		POJOFactory.createClass("Repositories","edu.indiana.d2i.sead.matchmaker.pojo", rootNode, new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\plugins\\ruleset1\\src\\main\\java"));
 	
+		rootNode = mapper.readTree(new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\config\\MatchmakerInputSchema.json"));
+		POJOFactory.createClass("MatchmakerInputSchema","edu.indiana.d2i.sead.matchmaker.service.messaging", rootNode, new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\src\\main\\java"));
+	
 	} 
 }

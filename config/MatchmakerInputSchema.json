@@ -1,0 +1,7 @@
+{
+	"responseKey": "String",
+	"request":{
+			"operation" : "String", 
+			"message" : "String"
+			}
+}
