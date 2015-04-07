@@ -1,1 +1,6 @@
 /target/
+/.classpath
+/.settings/
+/karma.log
+/.project
+/README.md
