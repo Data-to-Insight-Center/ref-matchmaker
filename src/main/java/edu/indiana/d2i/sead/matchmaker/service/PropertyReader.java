@@ -16,7 +16,7 @@
 #
 # -----------------------------------------------------------------
 #
-# Project: Karma-Service-core
+# Project: Matchmaker Service
 # File:  PropertyReader.java
 # Description:  Utility class for reading properties file
 #
@@ -24,11 +24,6 @@
 # 
 */
 
-
-
-/**
- * 
- */
 package edu.indiana.d2i.sead.matchmaker.service;
 
 import java.io.FileInputStream;

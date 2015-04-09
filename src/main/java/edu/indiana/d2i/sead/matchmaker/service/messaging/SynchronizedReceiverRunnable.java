@@ -1,3 +1,29 @@
+/*
+#
+# Copyright 2015 The Trustees of Indiana University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or areed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# -----------------------------------------------------------------
+#
+# Project: Matchmaker
+# File:  SynchronizedReceiverRunnable.java
+# Description:  Runnable implementation of a service daemon thread.
+#
+# -----------------------------------------------------------------
+# 
+*/
+
 package edu.indiana.d2i.sead.matchmaker.service.messaging;
 
 import java.io.IOException;
@@ -14,7 +40,7 @@ import edu.indiana.d2i.sead.matchmaker.service.ServiceLauncher;
 
 
 /**
- * @author Yuan Luo (yuanluo@indiana.edu)
+ * @author Yuan Luo
  */
 
 public class SynchronizedReceiverRunnable  implements Runnable  {
@@ -56,9 +82,9 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 					JsonNode requestMessageJsonNode=this.input.getJsonTree();
 					
 					
-					String ResponseRoutingKey=requestMessageJsonNode.get("responseKey").toString();
+					String ResponseRoutingKey=requestMessageJsonNode.get("responseKey").asText();
 					String request=requestMessageJsonNode.get("request").toString();
-					log.info("[Matchmaker server: Request] "+input);
+					log.info("[Matchmaker server: Request] "+request);
 					log.info("[Matchmaker server: Message Response Routing Key] "+ResponseRoutingKey);
 					
 					//Perform Service Logic
@@ -73,6 +99,8 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 					//Response
 					msgconf.setResponseRoutingKey(ResponseRoutingKey);
 					Sender sender=new Sender(msgconf, MessagingOperationTypes.SEND_RESPONSE);
+					//System.out.println(msgconf.getResponseExchangeName()+":"+msgconf.getResponseQueueName()+":"+msgconf.getResponseRoutingKey());
+					
 					try {
 						sender.sendMessage(response);
 						log.info("[Matchmaker server: Send Response to a client]");

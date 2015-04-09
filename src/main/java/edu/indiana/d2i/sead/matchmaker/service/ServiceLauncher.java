@@ -1,6 +1,6 @@
 /*
 #
-# Copyright 2007 The Trustees of Indiana University
+# Copyright 2015 The Trustees of Indiana University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 #
 # -----------------------------------------------------------------
 #
-# Project: Karma-Service-core
+# Project: Matchmaker
 # File:  ServiceLauncher.java
 # Description:  Utility class for initializing service and launching
 #   internal threads and daemons
@@ -26,17 +26,10 @@
 */
 
 
-
-/**
- * 
- */
 package edu.indiana.d2i.sead.matchmaker.service;
 
-import edu.indiana.d2i.sead.matchmaker.drivers.MetaDriver;
 import edu.indiana.d2i.sead.matchmaker.service.messaging.*;
-
 import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
