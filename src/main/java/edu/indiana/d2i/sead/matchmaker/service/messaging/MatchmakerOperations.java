@@ -29,6 +29,8 @@ package edu.indiana.d2i.sead.matchmaker.service.messaging;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import edu.indiana.d2i.sead.matchmaker.drivers.MetaDriver;
+
 /**
  * @author Yuan Luo
  */
@@ -38,15 +40,17 @@ public class MatchmakerOperations {
 	public static final String  ERROR_STRING = "SERVER ERROR";
 
 
-	/*
+	
 	public enum OperationType {
 		INFOMATION,
 		BROKER
 	}
-	*/
+	
 	
 	public String exec(String message){
-		return "{success:true,response:\"Sample Response Message\"}";
+		//return "{success:true,response:\"Sample Response Message\"}";
+		MetaDriver md = new MetaDriver();
+		return md.exec(message);
 	}
 
 }

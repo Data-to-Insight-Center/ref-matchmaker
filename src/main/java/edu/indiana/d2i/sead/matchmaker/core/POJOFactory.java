@@ -13,6 +13,7 @@ import org.jsonschema2pojo.rules.RuleFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JType;
 
@@ -27,9 +28,33 @@ public class POJOFactory {
 		//Jsonschema2Pojo.generate(new DefaultGenerationConfig());;
 	}
 
-	public static void main(String[] args) throws JsonProcessingException, IOException {
+	public static void main(String[] args) throws JsonProcessingException, IOException, ClassNotFoundException {
 		// TODO Auto-generated method stub
+		
 		ObjectMapper mapper = new ObjectMapper();
+
+		POJOGenerator pojogen = new POJOGenerator();
+		pojogen.fromPath(args[0]);
+		if(pojogen.getJsonTree().isArray()){
+			ArrayNode jarray=(ArrayNode)pojogen.getJsonTree();
+			for (int i=0;i<jarray.size();i++){
+				JsonNode conf = jarray.get(i);
+				//System.out.println(conf.get("format").textValue());
+				//System.out.println(conf.get("format").toString());
+				//System.out.println(conf.get("format").asText());
+				JsonNode rootNode = mapper.readTree(new File(conf.get("format").asText()));
+				POJOFactory.createClass(conf.get("className").asText(),conf.get("packageName").asText(), rootNode, new File(conf.get("codeLocation").asText()));
+			}
+
+		}else {
+			JsonNode conf = pojogen.getJsonTree();
+			JsonNode rootNode = mapper.readTree(new File(conf.get("format").asText()));
+			POJOFactory.createClass(conf.get("className").asText(),conf.get("packageName").asText(), rootNode, new File(conf.get("codeLocation").asText()));
+		}
+		
+				
+		
+		/*
 		JsonNode rootNode = mapper.readTree(new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\profile\\person.json"));
 		POJOFactory.createClass("Person","edu.indiana.d2i.sead.matchmaker.pojo", rootNode, new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\plugins\\ruleset1\\src\\main\\java"));
 		
@@ -41,6 +66,6 @@ public class POJOFactory {
 	
 		rootNode = mapper.readTree(new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\config\\MatchmakerInputSchema.json"));
 		POJOFactory.createClass("MatchmakerInputSchema","edu.indiana.d2i.sead.matchmaker.service.messaging", rootNode, new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\src\\main\\java"));
-	
+		*/
 	} 
 }

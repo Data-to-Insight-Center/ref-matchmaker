@@ -112,8 +112,12 @@ public class MatchMakingList {
 	}
 	
 	public void printCandidateList(){
+		System.out.println(CandidateList());	
+	}
+	
+	public String CandidateList(){
 		ObjectMapper mapper = new ObjectMapper();
-        String matchmaking;
+        String matchmaking = "";
 		try {
 			matchmaking = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.candidateList);
 			System.out.println(matchmaking);
@@ -121,7 +125,7 @@ public class MatchMakingList {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return matchmaking;
 	}
 
 	public static void main(String[] args) throws JsonProcessingException, ClassNotFoundException {

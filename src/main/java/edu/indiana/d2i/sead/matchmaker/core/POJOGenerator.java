@@ -18,6 +18,10 @@ public class POJOGenerator {
 	private JsonNode jsonTree=null;
 	private Class<?> pojo=null;
 	
+	public POJOGenerator(){
+		// empty object
+	}
+	
 	public POJOGenerator(String className) throws ClassNotFoundException{
 		ClassLoader cls =ClassLoader.getSystemClassLoader();
 		this.pojo=cls.loadClass(className);
