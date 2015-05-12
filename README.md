@@ -258,3 +258,61 @@ Final Match:
 }
 ======================
 ~~~
+Configuration and Installation
+-----------------
+1) Build code generator that can generate java source code based on a json file that describes multiple json files.
+~~~
+./build-codegen.sh
+~~~
+2) Generate java source code for Matchmaker messaging input schema.
+~~~
+./build-codegen.sh config/matchmaker_codegen.json
+~~~
+3) Build matchmaker
+~~~
+./build-standalone.sh
+~~~
+4) To add rule jar, generate java source code based on profile schemas(files), and build rule jar, and copy jar file to ./target/
+~~~
+./build-codegen.sh plugins/ruleset1/config/codegen.json
+cd plugins/ruleset1/
+mvn install
+cp plugins/ruleset1/target/ruleset1-x.x.x.jar
+~~~
+5) Build matchmaker client
+~~~
+./build-client.sh
+~~~
+Use matchmaker
+-----------------
+1) Start matchmaker service
+~~~
+nohup ./bin/Matchmaker.sh config/matchmaker.properties > log.txt &
+~~~
+2) Using matchmaker servcie
+~~~
+./bin/MatchmakerClient.sh config/matchmaker.properties test/data/query.json
+~~~
+where test/data/query.json is 
+~~~
+{
+	"operation" : "query",
+	"message" : {
+		"@context": "http://schema.org/",
+  		"@type": "DataDownload",
+  		"name": "Debris Flow Flume",
+  		"description": "Sample description",
+  		"sourceOrganization": "Columbia University",
+  		"author": {
+    		"@type": "Person",
+    		"name": "Hsu, Leslie",
+    		"@id": "http://orcid.org/0000-0002-5353-807X",
+    		"email": "lhsu@ldeo.columbia.edu"
+  		},
+  		"fileSize": {"unit":"MB", "value": 2000},
+  		"contentUrl": "http://sead-vivo.d2i.indiana.edu:8080/sead-vivo/individual/n15603",
+  		"/subject": "Geophysics",
+  		"contentType" : "tif"
+	}
+}
+~~~
