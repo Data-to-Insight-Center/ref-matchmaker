@@ -83,7 +83,7 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 					
 					
 					String ResponseRoutingKey=requestMessageJsonNode.get("responseKey").asText();
-					String request=requestMessageJsonNode.get("request").toString();
+					JsonNode request=requestMessageJsonNode.get("request");
 					log.info("[Matchmaker server: Request] "+request);
 					log.info("[Matchmaker server: Message Response Routing Key] "+ResponseRoutingKey);
 					

@@ -2,6 +2,6 @@
 	"responseKey": "String",
 	"request":{
 			"operation" : "String", 
-			"message" : "String"
+			"message" : "object"
 			}
 }

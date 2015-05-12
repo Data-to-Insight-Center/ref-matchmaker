@@ -21,18 +21,15 @@ import edu.indiana.d2i.sead.matchmaker.core.POJOGenerator;
  */
 public class MetaDriver {
 
-	/**
-	 * @param args
-	 * @throws ClassNotFoundException 
-	 */
-	public String exec(String message) {
-		
+	MatchMakingList candidateList = null;
+	
+	public MetaDriver(String message){
 		POJOGenerator reposGen = null,personGen = null,researchObjectGen = null;
 		try {
 			reposGen = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.Repository");
-			reposGen.fromPath("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\profile\\repositories.json");
+			reposGen.fromPath("/Users/yuanluo/WorkZone/workspace/matchmaker-master/profile/repositories.json");
 			personGen = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.Person");
-			personGen.fromPath("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\profile\\person.json");
+			personGen.fromPath("/Users/yuanluo/WorkZone/workspace/matchmaker-master/profile/person.json");
 			researchObjectGen=new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.ResearchObject");
 			researchObjectGen.fromString(message);
 		} catch (ClassNotFoundException e2) {
@@ -44,7 +41,6 @@ public class MetaDriver {
 		Object person;
 		Object researchObject;
 		File[] rulefiles;
-		MatchMakingList initList = null;
 		String[] classNames;
 		try {
 			repositories = (Object[]) reposGen.generate();
@@ -52,11 +48,11 @@ public class MetaDriver {
 			researchObject= (Object) researchObjectGen.generate();
 			
 			rulefiles = new File[1];
-			rulefiles[0]=new File("C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\plugins\\ruleset1\\target\\ruleset1-1.0.0.jar");
-			initList=(MatchMakingList) Class.forName("edu.indiana.d2i.sead.matchmaker.custom.ruleset1.Ruleset1MatchMakingList").getConstructor(ArrayNode.class).newInstance((ArrayNode)reposGen.getJsonTree());
+			rulefiles[0]=new File("/Users/yuanluo/WorkZone/workspace/matchmaker-master/plugins/ruleset1/target/ruleset1-1.0.0.jar");
+			candidateList=(MatchMakingList) Class.forName("edu.indiana.d2i.sead.matchmaker.custom.ruleset1.Ruleset1MatchMakingList").getConstructor(ArrayNode.class).newInstance((ArrayNode)reposGen.getJsonTree());
 			classNames=new String[1];
 			classNames[0]=new String("edu.indiana.d2i.sead.matchmaker.custom.ruleset1.Ruleset1Utility");
-			new MatchMaker().basicGo(System.out, rulefiles, classNames, initList, repositories, person, researchObject);
+			new MatchMaker().basicGo(System.out, rulefiles, classNames, candidateList, repositories, person, researchObject);
 			
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
@@ -90,13 +86,22 @@ public class MetaDriver {
 			e.printStackTrace();
 		}
 		
+	}
+	
 
-        return "{sucess:true,response:"+initList.CandidateList() +"}";
-	} 
+
+	public String exec() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 	}
+
+
+
 
 }

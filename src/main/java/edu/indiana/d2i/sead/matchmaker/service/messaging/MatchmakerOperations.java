@@ -29,7 +29,11 @@ package edu.indiana.d2i.sead.matchmaker.service.messaging;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.indiana.d2i.sead.matchmaker.drivers.Deposit;
 import edu.indiana.d2i.sead.matchmaker.drivers.MetaDriver;
+import edu.indiana.d2i.sead.matchmaker.drivers.Query;
 
 /**
  * @author Yuan Luo
@@ -42,15 +46,24 @@ public class MatchmakerOperations {
 
 	
 	public enum OperationType {
-		INFOMATION,
+		QUERY,
 		BROKER
 	}
 	
 	
-	public String exec(String message){
+	public String exec(JsonNode request){
 		//return "{success:true,response:\"Sample Response Message\"}";
-		MetaDriver md = new MetaDriver();
-		return md.exec(message);
+		MetaDriver md = null;
+		l.info(request.get("operation").asText());
+		if(request.get("operation").asText().equals("query")){
+			md =  new Query(request.get("message").toString());
+			return md.exec();
+		}else if(request.get("operation").asText().equals("deposit")){
+			md =  new Deposit(request.get("message").toString());
+			return md.exec();
+		}
+		return "{success:false,response:\"Invalid Operation\"}";
+
 	}
 
 }
