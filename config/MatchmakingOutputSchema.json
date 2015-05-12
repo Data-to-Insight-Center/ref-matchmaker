@@ -1,5 +1,5 @@
 {
 	"success": boolean,
-	"message" : "String"
+	"message" : "object"
 
 }
