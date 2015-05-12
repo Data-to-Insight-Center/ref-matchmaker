@@ -11,9 +11,17 @@ prog="build.sh"
 ###################################################################
 
 build() {
-    mvn clean install -Dmaven.test.skip=true
+    mvn install -Dmaven.test.skip=true
     mvn dependency:copy-dependencies
-    mkdir bin
+    #mkdir bin
+
+echo "
+#!/bin/sh
+BUILD=$BUILD
+LIB=$LIB
+" > ./bin/Matchmaker.sh
+
+echo '
 
 for i in $(ls $LIB |grep ".jar"); do
         CLASSES=$CLASSES:$LIB/$i
@@ -23,12 +31,8 @@ for i in $(ls $BUILD |grep ".jar"); do
         CLASSES=$CLASSES:$BUILD/$i
 done
 
-echo "
-#!/bin/sh
-CLASSES=$CLASSES
-" > ./bin/Matchmaker.sh
 
-echo '
+
 if [ "$1" = "" ];
 then
     echo
@@ -68,7 +72,7 @@ case "$1" in
         clean
         ;;
   *)
-        clean
+        #clean
         build
         RETVAL=$?
         ;;

@@ -53,13 +53,13 @@ chmod 755 ./bin/codegen.sh
 
 
 
-	return $RETVAL
+        return $RETVAL
 }
 ###################################################################
 clean(){
-	rm -rf $BIN
-	mvn clean
-	return $RETVAL
+        rm -rf $BIN
+        mvn clean
+        return $RETVAL
 }
 ###################################################################
 case "$1" in

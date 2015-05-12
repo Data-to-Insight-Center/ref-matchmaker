@@ -6,7 +6,18 @@
 	<groupId>edu.indiana.d2i.sead</groupId>
 	<artifactId>matchmaker</artifactId>
 	<version>1.0.0</version>
-  
+	<build>
+	  <plugins>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-compiler-plugin</artifactId>
+	      <configuration>
+	        <source>1.8</source>
+	        <target>1.8</target>
+	      </configuration>
+	    </plugin>
+	  </plugins>
+	</build>
 	<profiles>
 	  <profile>
 	    <id>codegen</id>
@@ -19,6 +30,8 @@
 	            <includes>
 	              	<include>edu/indiana/d2i/sead/matchmaker/core/POJO*</include>
 	            </includes>
+	            <source>1.8</source>
+	            <target>1.8</target>
 	          </configuration>
 	        </plugin>
 	      </plugins>
@@ -35,6 +48,8 @@
 	            <includes>
 	              <include>edu/indiana/d2i/sead/matchmaker/*</include>
 	            </includes>
+	            <source>1.8</source>
+	            <target>1.8</target>
 	          </configuration>
 	        </plugin>
 	      </plugins>
@@ -52,6 +67,8 @@
 					<include>edu/indiana/d2i/sead/matchmaker/client/*.class</include>
 					<include>edu/indiana/d2i/sead/matchmaker/service/messaging/*.class</include>
 				</includes>
+	            <source>1.8</source>
+	            <target>1.8</target>
 	          </configuration>
 	        </plugin>
 	      </plugins>
