@@ -258,8 +258,12 @@ Final Match:
 }
 ======================
 ~~~
-Configuration and Installation
+Configuration and Installation (for administrators and users)
 -----------------
+0) Configuration: modify self-explanatory configuration files properly.
+~~~
+vi config/matchmaker.properties
+~~~
 1) Build code generator that can generate java source code based on a json file that describes multiple json files.
 ~~~
 ./build-codegen.sh
@@ -277,7 +281,7 @@ Configuration and Installation
 ./build-codegen.sh plugins/ruleset1/config/codegen.json
 cd plugins/ruleset1/
 mvn install
-cp plugins/ruleset1/target/ruleset1-x.x.x.jar
+cp plugins/ruleset1/target/ruleset1-x.x.x.jar target/
 ~~~
 5) Build matchmaker client
 ~~~
@@ -315,4 +319,41 @@ where test/data/query.json is
   		"contentType" : "tif"
 	}
 }
+~~~
+
+Development Guideline For External Components (PDT and Research Repositories)
+-----------------
+Matchmaker sends request to external components with the following schema:
+~~~
+{
+	"responseKey": "String",
+	"request":{
+			"operation" : "String", 
+			"message" : "object"
+			}
+}
+~~~
+and expect to have response from external components with the following schema:
+~~~
+{
+	"success": boolean,
+	"message" : "object"
+}
+~~~
+To be more specific, the matchmaker,
+1) queries the PDT using "query" operation and expects the PDT to return an JSON-LD (described as an object in the schema) as a value to the message attribute.
+and 2) deposit to repository using "deposit" operation and expects a repository to return in the message an JSON object with the following schema:
+~~~
+"message":{"doi" :"String"}
+~~~ 
+All the communication will be done using messaging system, change the following configuration accordingly to meet the security needs.
+~~~
+messaging.username=username
+messaging.password=password
+messaging.hostname=matchmaker-messaging-host
+messaging.hostport=5672
+messaging.virtualhost=/
+messaging.exchangename=ExternalExchange
+messaging.queuename=ExternalQueue
+messaging.routingkey=ExternalKey
 ~~~
