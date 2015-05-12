@@ -321,7 +321,7 @@ where test/data/query.json is
 }
 ~~~
 
-Development Guideline For External Components (PDT and Research Repositories)
+Development Guideline For External Components (PDT and Repositories)
 -----------------
 Matchmaker sends request to external components with the following schema:
 ~~~
