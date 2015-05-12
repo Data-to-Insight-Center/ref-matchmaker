@@ -16,11 +16,5 @@
 	"className":"Repositories",
 	"packageName":"edu.indiana.d2i.sead.matchmaker.pojo",
 	"codeLocation":"C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\plugins\\ruleset1\\src\\main\\java"
-},
-{
-	"format": "C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\config\\MatchmakerInputSchema.json",
-	"className":"MatchmakerInputSchema",
-	"packageName":"edu.indiana.d2i.sead.matchmaker.service.messaging",
-	"codeLocation":"C:\\Users\\yuanluo\\WorkZone\\workspace\\MatchMaker\\src\\main\\java"
 }
 ]
