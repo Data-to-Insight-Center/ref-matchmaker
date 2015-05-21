@@ -1,3 +1,44 @@
+/*
+#
+# Copyright 2015 The Trustees of Indiana University
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# -----------------------------------------------------------------
+#
+# Project: Matchmaker Service
+# File:  MatchMakingList.java
+# Description:  Key matchmaking operations. 
+#            The Drools rules adopt "when-then" logic. In Matchmaker, 
+#            each rule invokes one or more of the following Java methods
+#            in the "then" statement to update the candidate list. 
+#            The logic behind this rule invocation process is that the 
+#            initial candidate list is always a full list. By applying rules, 
+#            the candidate list will be updated to a subset of the full 
+#            candidate list. Therefore, the order of rules will have no impact
+#            to the final result so that it ease the burden of rule 
+#            creation/verification. New rules can be added independently, 
+#            without looking back to the existing rules.
+#                 restrict() : Restrict candidate list to a given list.
+#                 notAllowed(): Remove selected candidates from the candidate list.
+#                 preferred(): Tag "preferred" to a list of candidates.
+#                 setWeight(): Set weight to a candidate.
+#                 addWeight(): Add weight to a candidate.
+#                 reduceWeight(): Reduce weight to a candidate.
+# -----------------------------------------------------------------
+# 
+*/
+
 package edu.indiana.d2i.sead.matchmaker.core;
 
 import java.util.ArrayList;
