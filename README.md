@@ -260,7 +260,7 @@ Final Match:
 ~~~
 Configuration and Installation (for administrators and users)
 -----------------
-0) Configuration: modify self-explanatory configuration files properly.
+0) Configuration: Setup RabbitMQ server, and modify self-explanatory configuration files properly.
 ~~~
 vi config/matchmaker.properties
 ~~~
@@ -270,7 +270,7 @@ vi config/matchmaker.properties
 ~~~
 2) Generate java source code for Matchmaker messaging input schema.
 ~~~
-./build-codegen.sh config/matchmaker_codegen.json
+./bin/codegen.sh config/matchmaker_codegen.json
 ~~~
 3) Build matchmaker
 ~~~
@@ -278,7 +278,7 @@ vi config/matchmaker.properties
 ~~~
 4) To add rule jar, generate java source code based on profile schemas(files), and build rule jar, and copy jar file to ./target/
 ~~~
-./build-codegen.sh plugins/ruleset1/config/codegen.json
+./bin/codegen.sh plugins/ruleset1/config/codegen.json
 cd plugins/ruleset1/
 mvn install
 cp plugins/ruleset1/target/ruleset1-x.x.x.jar target/
