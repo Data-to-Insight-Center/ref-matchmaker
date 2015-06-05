@@ -43,7 +43,7 @@ public class ServiceLauncher {
     
     private static boolean initialized = false;
     private static PropertyReader propertyReader = null;
-    private static AbstractENV env = null;
+    private static MatchmakerENV env = null;
     private static final Logger log = Logger.getLogger(ServiceLauncher.class);
     
     public static void start(String propertiesPath) throws ClassNotFoundException {
@@ -70,7 +70,7 @@ public class ServiceLauncher {
     public static boolean startMessageReceiverDaemon() {
 
 
-
+/*
         String MessagingUsername= propertyReader.getProperty("messaging.username");
 
         String MessagingPassword= propertyReader.getProperty("messaging.password");
@@ -90,7 +90,7 @@ public class ServiceLauncher {
         int MessagingRetryInterval= Integer.parseInt(propertyReader.getProperty("messaging.retry.interval")==null? "5": propertyReader.getProperty("messaging.retry.interval"));
         
         int MessagingRetryThreshold= Integer.parseInt(propertyReader.getProperty("messaging.retry.threshold")==null? "5": propertyReader.getProperty("messaging.retry.threshold"));
-
+*/
         MessagingDaemonsConfig msgdmconf=new MessagingDaemonsConfig();
         
         msgdmconf.setNumberOfMessagingDaemons(Integer.parseInt(propertyReader.getProperty("messaging.daemon")==null? "1": propertyReader.getProperty("messaging.daemon")));
@@ -98,11 +98,13 @@ public class ServiceLauncher {
         MessagingDaemons msgrd;
 
         MessagingConfig msgconf;
+        
+        MatchmakerENV env = new MatchmakerENV(propertyReader);
 
         try {
 
-            msgconf=new MessagingConfig(MessagingUsername, MessagingPassword, MessagingHostname, MessagingHostPort, MessagingVirtualHost, MessagingExchangeName, MessagingQueueName, MessagingRoutingKey, MessagingRetryInterval, MessagingRetryThreshold);
-
+            //msgconf=new MessagingConfig(MessagingUsername, MessagingPassword, MessagingHostname, MessagingHostPort, MessagingVirtualHost, MessagingExchangeName, MessagingQueueName, MessagingRoutingKey, MessagingRetryInterval, MessagingRetryThreshold);
+        	msgconf = new MessagingConfig(propertyReader);
             msgrd = new MessagingDaemons(msgdmconf, msgconf, env);
 
             msgrd.start();

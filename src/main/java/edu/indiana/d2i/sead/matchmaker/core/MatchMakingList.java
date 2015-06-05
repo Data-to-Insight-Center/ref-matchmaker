@@ -48,11 +48,18 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+
+import edu.indiana.d2i.sead.matchmaker.drivers.MetaDriver;
+import edu.indiana.d2i.sead.matchmaker.service.messaging.MatchmakerOperations;
 
 public class MatchMakingList {
 	
@@ -60,6 +67,8 @@ public class MatchMakingList {
 	protected int PRIORITY_PREFERRED;
 	protected int WEIGHT_DEFAULT;
 	protected String PRIMARY_KEY;
+	private Logger log;
+	
 	//String MatchmakingSchema ="{\"priority\":\"Integer\", \"weight\":\"Integer\"}";
 	
 	private HashMap<String, HashMap<String, Integer>> candidateList;
@@ -68,6 +77,7 @@ public class MatchMakingList {
 	 * Initiate candidateList, add all repositories.
 	 * */
 	public MatchMakingList(ArrayNode repositories){
+		log = Logger.getLogger(MatchMakingList.class);
 		init();
 		this.candidateList = new HashMap<String, HashMap<String, Integer>>();
 		for (JsonNode repo : repositories ){
@@ -161,7 +171,8 @@ public class MatchMakingList {
         String matchmaking = "";
 		try {
 			matchmaking = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.candidateList);
-			System.out.println(matchmaking);
+			//System.out.println(matchmaking);
+			log.info(matchmaking);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

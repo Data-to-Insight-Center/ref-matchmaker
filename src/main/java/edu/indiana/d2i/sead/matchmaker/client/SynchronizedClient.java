@@ -298,10 +298,11 @@ public class SynchronizedClient {
 		String result=synchronizedClient.request(new File(pathToQueryFile));
 		synchronizedClient.closeConnection();
 		
-		System.out.println("Result:\n"+result);
-
-		long endTime = System.currentTimeMillis();
-		System.out.println("Total Execution Time: "+(endTime-startTime));
+		//System.out.println("Result:\n"+result);
+		System.out.println(result);
+		
+		//long endTime = System.currentTimeMillis();
+		//System.out.println("Total Execution Time: "+(endTime-startTime));
 		
 		
 	

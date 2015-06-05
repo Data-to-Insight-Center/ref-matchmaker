@@ -28,53 +28,111 @@ package edu.indiana.d2i.sead.matchmaker.drivers;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import edu.indiana.d2i.sead.matchmaker.core.MatchMaker;
 import edu.indiana.d2i.sead.matchmaker.core.MatchMakingList;
+import edu.indiana.d2i.sead.matchmaker.core.POJOFactory;
 import edu.indiana.d2i.sead.matchmaker.core.POJOGenerator;
+import edu.indiana.d2i.sead.matchmaker.service.messaging.MatchmakerENV;
+import edu.indiana.d2i.sead.matchmaker.service.messaging.SynchronizedReceiverRunnable;
 
 /**
  * @author yuanluo
  *
  */
+//TODO: query PDT (when available) to get profiles, instead of using local copies.
+
 public class MetaDriver {
-	//TODO: query PDT (when available) to get profiles, instead of using local copies.
 	MatchMakingList candidateList = null;
+	private Logger log;
+	private MatchmakerENV env=null;
 	
-	public MetaDriver(String message){
-		POJOGenerator reposGen = null,personGen = null,researchObjectGen = null;
-		try {
-			reposGen = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.Repository");
-			reposGen.fromPath("/Users/yuanluo/WorkZone/workspace/matchmaker-master/profile/repositories.json");
-			personGen = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.Person");
-			personGen.fromPath("/Users/yuanluo/WorkZone/workspace/matchmaker-master/profile/person.json");
-			researchObjectGen=new POJOGenerator("edu.indiana.d2i.sead.matchmaker.pojo.ResearchObject");
-			researchObjectGen.fromString(message);
-		} catch (ClassNotFoundException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+	public MetaDriver(MatchmakerENV env, String message){
+		log = Logger.getLogger(MetaDriver.class);
+		this.env=env;
+		ObjectMapper mapper = new ObjectMapper();
+		POJOGenerator pojogen = new POJOGenerator();
+		pojogen.fromPath(env.getRuleJarProfilePath());
+		ArrayList<File> ruleFileList = new ArrayList<File>();
+		ArrayList<String> classNameList = new ArrayList<String>();
+		JsonNode ruleJars = pojogen.getJsonTree();
+		String mainClassName = ruleJars.get("MatchMakingListClass").asText();
+		JsonNode jars = ruleJars.get("jars");
+		JsonNode pojoClasses = ruleJars.get("POJOClasses");
+		if(jars.isArray()){
+			ArrayNode jarray=(ArrayNode)jars;
+			for (int i=0;i<jarray.size();i++){
+				JsonNode jar = jarray.get(i);
+				ruleFileList.add(new File(jar.get("jarLocation").asText()));
+				ArrayNode classes=(ArrayNode)jar.get("classNames");
+				if(classes.isArray()){
+					for (int j=0;j<classes.size();j++){
+						classNameList.add(classes.get(j).asText());
+					}
+				} else{
+					classNameList.add(classes.asText());
+				}
+			}
+		}else {
+			JsonNode jar = jars;
+			ruleFileList.add(new File(jar.get("jarLocation").asText()));
+			ArrayNode classes=(ArrayNode)jar.get("classNames");
+			if(classes.isArray()){
+				for (int j=0;j<classes.size();j++){
+					classNameList.add(classes.get(j).asText());
+				}
+			} else{
+				classNameList.add(classes.asText());
+			}
 		}
-    	 
+		
+		log.info("mainClassName: "+mainClassName);
+		
 		Object[] repositories;
 		Object person;
 		Object researchObject;
-		File[] rulefiles;
+		File[] ruleFiles;
 		String[] classNames;
 		try {
-			repositories = (Object[]) reposGen.generate();
-			person = (Object) personGen.generate();
-			researchObject= (Object) researchObjectGen.generate();
+			//Generate POJO objects
+			POJOGenerator reposGen = null,personGen = null,researchObjectGen = null;
+			reposGen = new POJOGenerator(pojoClasses.get("Repository").asText());
+			personGen = new POJOGenerator(pojoClasses.get("Person").asText());
+			researchObjectGen=new POJOGenerator(pojoClasses.get("ResearchObject").asText());
 			
-			rulefiles = new File[1];
-			rulefiles[0]=new File("/Users/yuanluo/WorkZone/workspace/matchmaker-master/plugins/ruleset1/target/ruleset1-1.0.0.jar");
-			candidateList=(MatchMakingList) Class.forName("edu.indiana.d2i.sead.matchmaker.custom.ruleset1.Ruleset1MatchMakingList").getConstructor(ArrayNode.class).newInstance((ArrayNode)reposGen.getJsonTree());
-			classNames=new String[1];
-			classNames[0]=new String("edu.indiana.d2i.sead.matchmaker.custom.ruleset1.Ruleset1Utility");
-			new MatchMaker().basicGo(System.out, rulefiles, classNames, candidateList, repositories, person, researchObject);
+			reposGen.fromString(getRepositories());
+			repositories = (Object[]) reposGen.generate();
+			researchObjectGen.fromString(message);
+			researchObject= (Object) researchObjectGen.generate();
+			personGen.fromString(getPerson(researchObject));
+			person = (Object) personGen.generate();
+			
+			ruleFiles = new File[ruleFileList.size()];
+			for(int i=0;i<ruleFileList.size();i++){
+				ruleFiles[i] = ruleFileList.get(i);
+				log.info("RuleFile: "+ruleFiles[i].getPath());
+			}
+			
+			candidateList=(MatchMakingList) Class.forName(mainClassName).getConstructor(ArrayNode.class).newInstance((ArrayNode)reposGen.getJsonTree());
+			
+			classNames = new String[classNameList.size()];
+			for(int i=0;i<classNameList.size();i++){
+				classNames[i] = classNameList.get(i);
+				log.info("ClassName: "+classNames[i]);
+			}
+			
+			log.info("ResearchObject: "+message);
+			
+			new MatchMaker().basicGo(System.out, ruleFiles, classNames, candidateList, repositories, person, researchObject);
 			
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
@@ -110,7 +168,31 @@ public class MetaDriver {
 		
 	}
 	
-
+	public String getRepositories() throws ClassNotFoundException{
+		POJOGenerator reposGen = new POJOGenerator();
+		String cachedProfileRepositories = this.env.getCachedProfileRepositories();
+		if(cachedProfileRepositories!=null&&cachedProfileRepositories!=""){
+			reposGen.fromPath(cachedProfileRepositories);
+			log.info("RepoList: "+reposGen.getJsonTree().toString());
+			return reposGen.getJsonTree().toString();
+		} else{
+			//TODO: Retrieve repository profiles from PDT
+			return null;
+		}
+	}
+	
+	public String getPerson(Object researchObject) throws ClassNotFoundException{
+		POJOGenerator personGen = new POJOGenerator();
+		String cachedProfilePerson = this.env.getCachedProfilePerson();
+		if(cachedProfilePerson!=null&&cachedProfilePerson!=""){
+			personGen.fromPath(cachedProfilePerson);
+			log.info("Person: "+personGen.getJsonTree().get(0).toString());
+			return personGen.getJsonTree().get(0).toString(); //return the first person, just for test purpose
+		}else {
+			//TODO: Retrieve person profile from PDT, based on person attribute in a researchObject
+			return null;
+		}
+	}
 
 	public String exec() {
 		// TODO Auto-generated method stub

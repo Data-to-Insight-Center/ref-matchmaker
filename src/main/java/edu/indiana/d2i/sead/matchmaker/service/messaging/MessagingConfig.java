@@ -44,6 +44,20 @@ public class MessagingConfig {
 	private int MessagingRetryThreshold;
 	private PropertyReader property = null;
 	
+	public MessagingConfig(PropertyReader property){
+		//this.property = PropertyReader.getInstance(propertiesPath);
+		this.property = property;
+		this.setUsername(this.property.getProperty("messaging.username"));
+		this.setPassword(this.property.getProperty("messaging.password"));
+		this.setVirtualHost(this.property.getProperty("messaging.virtualhost"));
+		this.setHost(this.property.getProperty("messaging.hostname"));
+		this.setPort(Integer.parseInt(this.property.getProperty("messaging.hostport")));
+		this.setBaseExchangeName(this.property.getProperty("messaging.exchangename")==null? "MatchmakerExchange": this.property.getProperty("messaging.exchangename"));
+		this.setBaseQueueName(this.property.getProperty("messaging.queuename")==null? "MatchmakerQueue": this.property.getProperty("messaging.queuename"));
+		this.setBaseRoutingKey(this.property.getProperty("messaging.routingkey")==null? "MatchmakerKey": this.property.getProperty("messaging.routingkey"));
+		this.setMessagingRetryInterval(Integer.parseInt(this.property.getProperty("messaging.retry.interval")==null? "5": this.property.getProperty("messaging.retry.interval")));
+		this.setMessagingRetryThreshold(Integer.parseInt(this.property.getProperty("messaging.retry.threshold")==null? "5": this.property.getProperty("messaging.retry.threshold")));
+	};
 	public MessagingConfig(String propertiesPath){
 		this.property = PropertyReader.getInstance(propertiesPath);
 		this.setUsername(this.property.getProperty("messaging.username"));

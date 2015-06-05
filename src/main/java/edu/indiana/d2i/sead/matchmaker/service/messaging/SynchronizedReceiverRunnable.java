@@ -46,6 +46,7 @@ import edu.indiana.d2i.sead.matchmaker.service.ServiceLauncher;
 public class SynchronizedReceiverRunnable  implements Runnable  {
 
 	private MessagingConfig msgconf;
+	private MatchmakerENV env;
 	private Receiver receiver;
 	private MatchmakerOperations mmOperations;
 	private Logger log;
@@ -53,9 +54,11 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 	private int RETRY_INTERVAL;
 	private int RETRY_THRESHOLD;
 	public static final String  INVALID_REQUEST_ERROR_STRING = "Invalid Request";
+	public static final String  PROCESSING_ERROR_STRING = "Processing Error";
 	
-	public SynchronizedReceiverRunnable(MessagingConfig msgconf, AbstractENV env) throws IOException, ClassNotFoundException{
+	public SynchronizedReceiverRunnable(MessagingConfig msgconf, MatchmakerENV env) throws IOException, ClassNotFoundException{
 		this.msgconf=msgconf;
+		this.env = env;
 		this.receiver=new Receiver(msgconf, MessagingOperationTypes.RECEIVE_REQUESTS);
 		
 		this.mmOperations = new MatchmakerOperations();
@@ -63,14 +66,15 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 		this.log = Logger.getLogger(SynchronizedReceiverRunnable.class);
 		this.RETRY_INTERVAL=msgconf.getMessagingRetryInterval();
 		this.RETRY_THRESHOLD=msgconf.getMessagingRetryThreshold();
-		input = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.service.messaging.MatchmakerInputSchema");
-		
+		//input = new POJOGenerator("edu.indiana.d2i.sead.matchmaker.service.messaging.MatchmakerInputSchema");
+		input = new POJOGenerator(env.getMatchmakerInputSchemaClassName());
 	}
 	
 	public void run() throws java.lang.IllegalMonitorStateException{
 		boolean runInfinite=true;
 		String requestMessage;
 		while (runInfinite) {
+			
 			try {
 				log.info("[Matchmaker server: Listening Queries from Messaging System]");
 				requestMessage=this.receiver.getMessage();
@@ -90,11 +94,10 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 					//Perform Service Logic
 					String response=null;
 					try{
-						response=this.mmOperations.exec(request);
+						response=this.mmOperations.exec(env, request);
 					}catch(Exception e){
-						
-						response=INVALID_REQUEST_ERROR_STRING;
-						log.info("[Matchmaker server: Request Error] "+e.toString());
+						response=PROCESSING_ERROR_STRING;
+						log.info("[Matchmaker server: Processing Error] "+e.toString());
 					}
 					//Response
 					msgconf.setResponseRoutingKey(ResponseRoutingKey);

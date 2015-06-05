@@ -1,8 +1,10 @@
 package edu.indiana.d2i.sead.matchmaker.drivers;
 
+import edu.indiana.d2i.sead.matchmaker.service.messaging.MatchmakerENV;
+
 public class Deposit extends MetaDriver {
-	public Deposit(String message){
-		super(message);
+	public Deposit(MatchmakerENV env, String message){
+		super(env, message);
 	}
 	
 	public String exec() {

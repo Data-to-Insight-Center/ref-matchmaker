@@ -45,7 +45,7 @@ public class MessagingDaemons  {
 	
 	private Logger log;
 	
-	public MessagingDaemons(MessagingDaemonsConfig msgdmconf, MessagingConfig msgconf, AbstractENV env) throws IOException, ClassNotFoundException{
+	public MessagingDaemons(MessagingDaemonsConfig msgdmconf, MessagingConfig msgconf, MatchmakerENV env) throws IOException, ClassNotFoundException{
 		this.numOfMessagingDaemons=msgdmconf.getNumberOfMessagingDaemons();
 		this.MessagingDeamons=new Thread[numOfMessagingDaemons];
 		

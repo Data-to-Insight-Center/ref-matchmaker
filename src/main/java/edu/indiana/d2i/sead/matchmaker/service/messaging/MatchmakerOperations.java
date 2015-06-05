@@ -51,15 +51,15 @@ public class MatchmakerOperations {
 	}
 	
 	
-	public String exec(JsonNode request){
+	public String exec(MatchmakerENV env, JsonNode request){
 		//return "{success:true,response:\"Sample Response Message\"}";
 		MetaDriver md = null;
 		l.info(request.get("operation").asText());
 		if(request.get("operation").asText().equals("query")){
-			md =  new Query(request.get("message").toString());
+			md =  new Query(env, request.get("message").toString());
 			return md.exec();
 		}else if(request.get("operation").asText().equals("deposit")){
-			md =  new Deposit(request.get("message").toString());
+			md =  new Deposit(env, request.get("message").toString());
 			return md.exec();
 		}
 		return "{success:false,response:\"Invalid Operation\"}";

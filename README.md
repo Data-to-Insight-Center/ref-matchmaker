@@ -2,7 +2,7 @@ MatchMaker
 ===============
 Introduction
 -----------------
-Matchmaker is a standalone service that continuously reads all the preferences and constraints and candidate entities, matching and ranking candidate entities that satisfies the preferences and constraints.
+Matchmaker is a stand-alone service that continuously reads all the preferences and constraints and candidate entities, matching and ranking candidate entities that satisfies the preferences and constraints.
 
 Motivating Use Case
 -----------------
@@ -13,7 +13,7 @@ Important Design Decisions
 * Matchmaker leverages Drools rule engine to make matchmaking decisions.
 * Matchmaker has a plugin mechanism that allows new rules and optionally associated helper java classes to be added.
 * Matchmaker has no hardcoded keywords of any kind, nor does it restrict to a particular JSON-LD schema. It generates on-the-fly POJO classes source code based on user input JSON-LD files, compile to customized jar file along with user defined rules and associated helper java classes, and instantiate POJOs (based on JSON-LD files) without pre-defined schema. However, if a JSON-LD schema is pre-defined, Matchmaker can generate POJO code and compile jar files offline, and only instantiate POJO objects (based on JSON-LD files) at runtime, making matchmaking process much faster.
-* The Drools rules adpot "when-then" logic. In Matchmaker, each rule invokes one or more of the following Java methods in the "then" statement to update the candidate list. The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full candidate list. Therefore, the order of rules will have no impact to the final result so that it ease the burden of rule creation/verification. New rules can be added independently, without looking back to the existing rules. 
+* The Drools rules adopt "when-then" logic. In Matchmaker, each rule invokes one or more of the following Java methods in the "then" statement to update the candidate list. The logic behind this rule invocation process is that the initial candidate list is always a full list. By applying rules, the candidate list will be updated to a subset of the full candidate list. Therefore, the order of rules will have no impact to the final result so that it ease the burden of rule creation/verification. New rules can be added independently, without looking back to the existing rules. 
 ~~~
 restrict() : Restrict candidate list to a given list.
 notAllowed(): Remove selected candidates from the candidate list.
@@ -276,12 +276,14 @@ vi config/matchmaker.properties
 ~~~
 ./build-standalone.sh
 ~~~
-4) To add rule jar, generate java source code based on profile schemas(files), and build rule jar, and copy jar file to ./target/
+4) To add rule jar, generate java source code based on profile schemas(files), and build rule jar, and copy jar file to ./target/, and update config/rule_jars_properties.json
 ~~~
 ./bin/codegen.sh plugins/ruleset1/config/codegen.json
 cd plugins/ruleset1/
 mvn install
+cd ../..
 cp plugins/ruleset1/target/ruleset1-x.x.x.jar target/
+vi config/rule_jars_properties.json
 ~~~
 5) Build matchmaker client
 ~~~
@@ -293,7 +295,7 @@ Use matchmaker
 ~~~
 nohup ./bin/Matchmaker.sh config/matchmaker.properties > log.txt &
 ~~~
-2) Using matchmaker servcie
+2) Using matchmaker service
 ~~~
 ./bin/MatchmakerClient.sh config/matchmaker.properties test/data/query.json
 ~~~

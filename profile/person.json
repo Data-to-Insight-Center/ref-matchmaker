@@ -1,3 +1,4 @@
+[
 {			
   "@context": "http://schema.org/",			
   "@type": "Person",			
@@ -9,3 +10,4 @@
   "URL": "https://sites.google.com/site/lhsu000001/",			
   "codeRepository": "IDEALS"			
 }
+]
