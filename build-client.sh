@@ -29,20 +29,27 @@ CLASSES=$CLASSES
 " > ./bin/MatchmakerClient.sh
 
 echo '
-if [ "$2" = "" ];
+if [ "$3" = "" ];
 then
     echo
     echo "#########################################"
     echo "#         MatchmakerClient.sh           #"
     echo "#########################################"
     echo
-    echo "$ MatchmakerClient.sh <properties file> <input file>"
+    echo "$ MatchmakerClient.sh <sync/async> <properties file> <input file>"
     echo
     exit 1
 fi
 
 CP=:$CLASSPATH:$CLASSES:.
-java -classpath $CP edu.indiana.d2i.sead.matchmaker.client.SynchronizedClient $1 $2
+if [ "$1" = "sync" ];
+then
+mainClass=edu.indiana.d2i.sead.matchmaker.client.SynchronizedClient
+else
+mainClass=edu.indiana.d2i.sead.matchmaker.client.AsynchronizedClient
+fi
+java -classpath $CP $mainClass $2 $3
+
 ' >> ./bin/MatchmakerClient.sh
 chmod 755 ./bin/MatchmakerClient.sh
 

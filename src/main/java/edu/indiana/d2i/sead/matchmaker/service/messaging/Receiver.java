@@ -73,6 +73,11 @@ public class Receiver {
 		this.factory.setPort(msgconf.getPort());
 
 		switch (OpType) {
+		case RECEIVE_ASYNC_REQUEST:
+			this.ExchangeName = msgconf.getAsyncRequestExchangeName();
+			this.QueueName = msgconf.getAsyncRequestQueueName();
+			this.RoutingKey = msgconf.getAsyncRequestRoutingKey();
+			break;
 		case RECEIVE_REQUESTS:
 			this.ExchangeName = msgconf.getRequestExchangeName();
 			this.QueueName = msgconf.getRequestQueueName();

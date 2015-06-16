@@ -69,31 +69,10 @@ public class ServiceLauncher {
     
     public static boolean startMessageReceiverDaemon() {
 
-
-/*
-        String MessagingUsername= propertyReader.getProperty("messaging.username");
-
-        String MessagingPassword= propertyReader.getProperty("messaging.password");
-
-        String MessagingHostname= propertyReader.getProperty("messaging.hostname");
-
-        int MessagingHostPort= Integer.parseInt(propertyReader.getProperty("messaging.hostport"));
-
-        String MessagingVirtualHost= propertyReader.getProperty("messaging.virtualhost");
-
-        String MessagingExchangeName= propertyReader.getProperty("messaging.exchangename")==null? "MatchmakerExchange": propertyReader.getProperty("messaging.exchangename");
-
-        String MessagingQueueName= propertyReader.getProperty("messaging.queuename")==null? "MatchmakerQueue": propertyReader.getProperty("messaging.queuename");
-
-        String MessagingRoutingKey= propertyReader.getProperty("messaging.routingkey")==null? "MatchmakerKey": propertyReader.getProperty("messaging.routingkey");
+    	MessagingDaemonsConfig msgdmconf=new MessagingDaemonsConfig();
         
-        int MessagingRetryInterval= Integer.parseInt(propertyReader.getProperty("messaging.retry.interval")==null? "5": propertyReader.getProperty("messaging.retry.interval"));
-        
-        int MessagingRetryThreshold= Integer.parseInt(propertyReader.getProperty("messaging.retry.threshold")==null? "5": propertyReader.getProperty("messaging.retry.threshold"));
-*/
-        MessagingDaemonsConfig msgdmconf=new MessagingDaemonsConfig();
-        
-        msgdmconf.setNumberOfMessagingDaemons(Integer.parseInt(propertyReader.getProperty("messaging.daemon")==null? "1": propertyReader.getProperty("messaging.daemon")));
+        msgdmconf.setNumberOfSyncMessagingDaemons(Integer.parseInt(propertyReader.getProperty("messaging.daemon.sync")==null? "1": propertyReader.getProperty("messaging.daemon.sync")));
+        msgdmconf.setNumberOfAsyncMessagingDaemons(Integer.parseInt(propertyReader.getProperty("messaging.daemon.async")==null? "1": propertyReader.getProperty("messaging.daemon.async")));
         
         MessagingDaemons msgrd;
 

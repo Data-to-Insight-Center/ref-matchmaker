@@ -76,6 +76,10 @@ public class Sender {
 		this.channel = this.conn.createChannel();
 		
 		switch (OpType) {
+		case SEND_ASYNC_REQUEST:
+			this.ExchangeName = msgconf.getAsyncRequestExchangeName();
+			this.RoutingKey = msgconf.getAsyncRequestRoutingKey();
+			break;
 		case SEND_REQUEST:
 			this.ExchangeName = msgconf.getRequestExchangeName();
 			this.RoutingKey = msgconf.getRequestRoutingKey();

@@ -150,6 +150,15 @@ public class MessagingConfig {
 	public String getBaseQueueName(){
 		return this.BaseQueueName;
 	};
+	public String getAsyncRequestExchangeName(){
+		return this.BaseExchangeName+"_AsyncRequest";
+	};
+	public String getAsyncRequestRoutingKey(){
+		return this.BaseRoutingKey+"_AsyncRequest";
+	};
+	public String getAsyncRequestQueueName(){
+		return this.BaseQueueName+"_AsyncRequest";
+	};
 	public String getRequestExchangeName(){
 		return this.BaseExchangeName+"_Request";
 	};

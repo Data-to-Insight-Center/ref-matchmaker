@@ -40,18 +40,27 @@ import org.apache.log4j.Logger;
  */
 public class MessagingDaemons  {
 
-	private Thread[] MessagingDeamons;
-	private int numOfMessagingDaemons;
+	private Thread[] SyncMessagingDeamons;
+	private Thread[] AsyncMessagingDeamons;
+	private int numOfSyncMessagingDaemons;
+	private int numOfAsyncMessagingDaemons;
 	
 	private Logger log;
 	
 	public MessagingDaemons(MessagingDaemonsConfig msgdmconf, MessagingConfig msgconf, MatchmakerENV env) throws IOException, ClassNotFoundException{
-		this.numOfMessagingDaemons=msgdmconf.getNumberOfMessagingDaemons();
-		this.MessagingDeamons=new Thread[numOfMessagingDaemons];
+		this.numOfSyncMessagingDaemons=msgdmconf.getNumberOfSyncMessagingDaemons();
+		this.numOfAsyncMessagingDaemons=msgdmconf.getNumberOfAsyncMessagingDaemons();
+		this.SyncMessagingDeamons=new Thread[numOfSyncMessagingDaemons];
+		this.AsyncMessagingDeamons=new Thread[numOfAsyncMessagingDaemons];
 		
 		SynchronizedReceiverRunnable qsgrr=new SynchronizedReceiverRunnable(msgconf, env);
-	    for (int i = 0; i < this.numOfMessagingDaemons; i++) {
-			this.MessagingDeamons[i]= new Thread(qsgrr);
+	    for (int i = 0; i < this.numOfSyncMessagingDaemons; i++) {
+			this.SyncMessagingDeamons[i]= new Thread(qsgrr);
+		}
+	    
+	    AsynchronizedReceiverRunnable asgrr=new AsynchronizedReceiverRunnable(msgconf, env);
+	    for (int i = 0; i < this.numOfAsyncMessagingDaemons; i++) {
+			this.AsyncMessagingDeamons[i]= new Thread(asgrr);
 		}
 	    
 	    
@@ -59,10 +68,16 @@ public class MessagingDaemons  {
 	
 	public void start() throws java.lang.IllegalMonitorStateException{
 		log = Logger.getLogger(MessagingDaemons.class);
-		for (int i = 0; i < this.numOfMessagingDaemons; i++) {
-			log.info("Starting Messaging Deamon ["+i+"] for receiving messages from clients.");
-		    this.MessagingDeamons[i].start();
-		    log.info("Messaging Deamon ["+i+"] Started.");
+		for (int i = 0; i < this.numOfSyncMessagingDaemons; i++) {
+			log.info("Starting Messaging Sync Deamon ["+i+"] for receiving messages from clients.");
+		    this.SyncMessagingDeamons[i].start();
+		    log.info("Messaging Sync Deamon ["+i+"] Started.");
+
+		}
+		for (int i = 0; i < this.numOfAsyncMessagingDaemons; i++) {
+			log.info("Starting Messaging Async Deamon ["+i+"] for receiving messages from clients.");
+		    this.AsyncMessagingDeamons[i].start();
+		    log.info("Messaging Async Deamon ["+i+"] Started.");
 
 		}
 	    

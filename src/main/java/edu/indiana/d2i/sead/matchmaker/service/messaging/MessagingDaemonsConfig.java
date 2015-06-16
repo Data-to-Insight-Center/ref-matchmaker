@@ -27,16 +27,24 @@
 package edu.indiana.d2i.sead.matchmaker.service.messaging;
 
 public class MessagingDaemonsConfig{
-	private int NumberOfMessagingDaemons;
+	private int NumberOfSyncMessagingDaemons;
+	private int NumberOfAsyncMessagingDaemons;
 	
 	public MessagingDaemonsConfig(){
-		this.NumberOfMessagingDaemons=1;
+		this.NumberOfSyncMessagingDaemons=1;
+		this.NumberOfAsyncMessagingDaemons=1;
 	}
 	
-	public void setNumberOfMessagingDaemons(int numOfQueryDaemons){
-		this.NumberOfMessagingDaemons=numOfQueryDaemons;
+	public void setNumberOfSyncMessagingDaemons(int numOfQueryDaemons){
+		this.NumberOfSyncMessagingDaemons=numOfQueryDaemons;
 	}
-	public int getNumberOfMessagingDaemons(){
-		return this.NumberOfMessagingDaemons;
+	public void setNumberOfAsyncMessagingDaemons(int numOfQueryDaemons){
+		this.NumberOfAsyncMessagingDaemons=numOfQueryDaemons;
+	}
+	public int getNumberOfSyncMessagingDaemons(){
+		return this.NumberOfSyncMessagingDaemons;
+	}
+	public int getNumberOfAsyncMessagingDaemons(){
+		return this.NumberOfAsyncMessagingDaemons;
 	}
 }
