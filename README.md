@@ -297,7 +297,9 @@ nohup ./bin/Matchmaker.sh config/matchmaker.properties > log.txt &
 ~~~
 2) Using matchmaker service
 ~~~
-./bin/MatchmakerClient.sh config/matchmaker.properties test/data/query.json
+./bin/MatchmakerClient.sh sync config/matchmaker.properties test/data/query.json
+or
+./bin/MatchmakerClient.sh async config/matchmaker.properties test/data/query.json
 ~~~
 where test/data/query.json is 
 ~~~

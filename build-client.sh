@@ -13,7 +13,7 @@ prog="build.sh"
 build() {
     mvn install -Pmessaging -Dmaven.test.skip=true
     mvn dependency:copy-dependencies
-    #mkdir bin
+    mkdir -p bin
 
 for i in $(ls $LIB |grep ".jar"); do
         CLASSES=$CLASSES:$LIB/$i

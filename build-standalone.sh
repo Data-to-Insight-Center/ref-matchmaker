@@ -13,7 +13,7 @@ prog="build.sh"
 build() {
     mvn install -Dmaven.test.skip=true
     mvn dependency:copy-dependencies
-    #mkdir bin
+    mkdir -p bin
 
 echo "
 #!/bin/sh
