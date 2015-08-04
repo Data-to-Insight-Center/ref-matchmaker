@@ -348,7 +348,8 @@ To be more specific, the matchmaker,
 1) queries the PDT using "query" operation and expects the PDT to return an JSON-LD (described as an object in the schema) as a value to the message attribute.
 and 2) deposit to repository using "deposit" operation and expects a repository to return in the message an JSON object with the following schema:
 ~~~
-"message":{"doi" :"String"}
+"message":{"status" :"String"}
+"message":{"status" :"String","doi" :"String"}
 ~~~ 
 All the communication will be done using messaging system, change the following configuration accordingly to meet the security needs.
 ~~~
