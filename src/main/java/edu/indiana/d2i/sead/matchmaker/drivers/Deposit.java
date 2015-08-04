@@ -15,10 +15,11 @@ import edu.indiana.d2i.sead.matchmaker.service.messaging.MessagingConfig;
 
 public class Deposit extends MetaDriver {
 	private Logger log;
+	private JsonNode request;
 	
-	
-	public Deposit(MatchmakerENV env, String message){
-		super(env, message);
+	public Deposit(MatchmakerENV env, JsonNode request){
+		super(env, request.get("message").toString());
+		this.request = request;
 		log = Logger.getLogger(Deposit.class);
 		
 	}
@@ -35,7 +36,7 @@ public class Deposit extends MetaDriver {
 				MessagingConfig msgconf=new MessagingConfig(MessageConfigPath);
 				msgconf.setBaseRoutingKey(getBaseRoutingKeyForRepo(repo));
 				AsynchronizedClient asynchronizedClient=new AsynchronizedClient(msgconf);
-				result=asynchronizedClient.request(this.getMessage());
+				result=asynchronizedClient.request(this.getRequest().toString());
 				asynchronizedClient.closeConnection();
 				
 				log.info("Message to be sent to Repo: "+this.getMessage());
@@ -50,12 +51,12 @@ public class Deposit extends MetaDriver {
 				depositFlag = depositFlag&&false;
 				
 			}
-			repoStrings = repoStrings + " " +repo +":"+result;
+			repoStrings = repoStrings + " " +repo +"("+result+")";
 			
 		}
-		log.info("{sucess:"+depositFlag+",response: Deposit requests sent to the following repositories: "+repoStrings+"}");
+		log.info("{\"sucess\":"+depositFlag+",\"response\": \"Deposit requests sent to "+repoStrings+"\"}");
 		
-		return "{sucess:"+depositFlag+",response: Deposit requests sent to the following repositories: "+repoStrings+"}";
+		return "{\"sucess\":"+depositFlag+",\"response\": \"Deposit requests sent to "+repoStrings+"\"}";
 	}
 	
 	public String getBaseRoutingKeyForRepo(String repoName){
@@ -63,6 +64,9 @@ public class Deposit extends MetaDriver {
 		return repoName;
 	}
 
+	public JsonNode getRequest(){
+		return this.request;
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

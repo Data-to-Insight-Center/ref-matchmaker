@@ -59,7 +59,7 @@ public class MatchmakerOperations {
 			md =  new Query(env, request.get("message").toString());
 			return md.exec();
 		}else if(request.get("operation").asText().equals("deposit")){
-			md =  new Deposit(env, request.get("message").toString());
+			md =  new Deposit(env, request);
 			return md.exec();
 		}
 		return "{success:false,response:\"Invalid Operation\"}";
