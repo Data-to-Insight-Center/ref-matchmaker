@@ -44,6 +44,7 @@ public class MatchmakerENV {
 	private String MatchmakerOutputSchemaClassName;
 	private String CachedProfileRepositories;
 	private String CachedProfilePerson;
+	private String RepoPropertiesPath;
 	
 	public MatchmakerENV(PropertyReader property){
 		//this.property = PropertyReader.getInstance(propertiesPath);
@@ -53,6 +54,7 @@ public class MatchmakerENV {
 		this.setMatchmakerOutputSchemaClassName(this.property.getProperty("matchmaker.output.schema.class.name"));
 		this.setCachedProfileRepositories(this.property.getProperty("cached.profile.repositories"));
 		this.setCachedProfilePerson(this.property.getProperty("cached.profile.person"));
+		this.setRepoPropertiesPath(this.property.getProperty("repo.properties.path"));
 	};
 	public MatchmakerENV(String propertiesPath){
 		this.property = PropertyReader.getInstance(propertiesPath);
@@ -61,13 +63,15 @@ public class MatchmakerENV {
 		this.setMatchmakerOutputSchemaClassName(this.property.getProperty("matchmaker.output.schema.class.name"));
 		this.setCachedProfileRepositories(this.property.getProperty("cached.profile.repositories"));
 		this.setCachedProfilePerson(this.property.getProperty("cached.profile.person"));
+		this.setRepoPropertiesPath(this.property.getProperty("repo.properties.path"));
 	};
-	public MatchmakerENV(String RuleJarProfilePath, String MatchmakerInputSchemaClassName, String MatchmakerOutputSchemaClassName, String CachedProfileRepositories, String CachedProfilePerson){
+	public MatchmakerENV(String RuleJarProfilePath, String MatchmakerInputSchemaClassName, String MatchmakerOutputSchemaClassName, String CachedProfileRepositories, String CachedProfilePerson, String RepoPropertiesPath){
 		this.setRuleJarProfilePath(RuleJarProfilePath);
 		this.setMatchmakerInputSchemaClassName(MatchmakerInputSchemaClassName);
 		this.setMatchmakerOutputSchemaClassName(MatchmakerOutputSchemaClassName);
 		this.setCachedProfileRepositories(CachedProfileRepositories);
 		this.setCachedProfilePerson(CachedProfilePerson);
+		this.setRepoPropertiesPath(RepoPropertiesPath);
 	};
 	public MatchmakerENV(MatchmakerENV env){
 		this.setRuleJarProfilePath(env.getRuleJarProfilePath());
@@ -75,6 +79,7 @@ public class MatchmakerENV {
 		this.setMatchmakerOutputSchemaClassName(env.getMatchmakerOutputSchemaClassName());
 		this.setCachedProfileRepositories(env.getCachedProfileRepositories());
 		this.setCachedProfilePerson(env.getCachedProfilePerson());
+		this.setRepoPropertiesPath(env.getRepoPropertiesPath());
 
 	};
 	
@@ -107,6 +112,12 @@ public class MatchmakerENV {
 	};
 	public String getCachedProfilePerson(){
 		return this.CachedProfilePerson;
+	};
+	public void	setRepoPropertiesPath(String RepoPropertiesPath){
+		this.RepoPropertiesPath=RepoPropertiesPath;
+	};
+	public String getRepoPropertiesPath(){
+		return this.RepoPropertiesPath;
 	};
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

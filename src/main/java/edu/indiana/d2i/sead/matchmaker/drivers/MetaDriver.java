@@ -55,10 +55,12 @@ public class MetaDriver {
 	MatchMakingList candidateList = null;
 	private Logger log;
 	private MatchmakerENV env=null;
+	private String message =null;
 	
 	public MetaDriver(MatchmakerENV env, String message){
 		log = Logger.getLogger(MetaDriver.class);
 		this.env=env;
+		this.message=message;
 		ObjectMapper mapper = new ObjectMapper();
 		POJOGenerator pojogen = new POJOGenerator();
 		pojogen.fromPath(env.getRuleJarProfilePath());
@@ -194,6 +196,16 @@ public class MetaDriver {
 		}
 	}
 
+	public MatchmakerENV getENV() {
+		// TODO Auto-generated method stub
+		return this.env;
+	}
+	
+	public String getMessage() {
+		// TODO Auto-generated method stub
+		return this.message;
+	}
+	
 	public String exec() {
 		// TODO Auto-generated method stub
 		return null;

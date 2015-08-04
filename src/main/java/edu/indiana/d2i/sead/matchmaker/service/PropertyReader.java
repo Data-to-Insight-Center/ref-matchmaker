@@ -28,6 +28,7 @@ package edu.indiana.d2i.sead.matchmaker.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -36,8 +37,8 @@ import java.util.Properties;
  */
 public class PropertyReader {
     
-    private static PropertyReader instance = null;
-    private static Properties properties;
+	private static HashMap<String, PropertyReader> instance = new HashMap<String, PropertyReader>();
+	private static Properties properties;
     
     private PropertyReader(String propertiesPath) {
         try {
@@ -52,10 +53,10 @@ public class PropertyReader {
     }
     
     public static PropertyReader getInstance(String propertiesPath) {
-        if (instance == null) {
-            instance = new PropertyReader(propertiesPath);
-        }
-        return instance;
+    	if (!instance.containsKey(propertiesPath)) {
+         instance.put(propertiesPath, new PropertyReader(propertiesPath));
+     }
+     return instance.get(propertiesPath);
     }
     
     public String getProperty(String propertyName) {
