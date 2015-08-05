@@ -53,14 +53,16 @@ import edu.indiana.d2i.sead.matchmaker.service.messaging.SynchronizedReceiverRun
 
 public class MetaDriver {
 	MatchMakingList candidateList = null;
+	String responseID=null;
 	private Logger log;
 	private MatchmakerENV env=null;
 	private String message =null;
 	
-	public MetaDriver(MatchmakerENV env, String message){
+	public MetaDriver(MatchmakerENV env, String message, String responseID){
 		log = Logger.getLogger(MetaDriver.class);
 		this.env=env;
 		this.message=message;
+		this.responseID=responseID;
 		ObjectMapper mapper = new ObjectMapper();
 		POJOGenerator pojogen = new POJOGenerator();
 		pojogen.fromPath(env.getRuleJarProfilePath());

@@ -17,8 +17,8 @@ public class Deposit extends MetaDriver {
 	private Logger log;
 	private JsonNode request;
 	
-	public Deposit(MatchmakerENV env, JsonNode request){
-		super(env, request.get("message").toString());
+	public Deposit(MatchmakerENV env, JsonNode request, String responseID){
+		super(env, request.get("message").toString(), responseID);
 		this.request = request;
 		log = Logger.getLogger(Deposit.class);
 		
@@ -54,9 +54,9 @@ public class Deposit extends MetaDriver {
 			repoStrings = repoStrings + " " +repo +"("+result+")";
 			
 		}
-		log.info("{\"sucess\":"+depositFlag+",\"response\": \"Deposit requests sent to "+repoStrings+"\"}");
+		log.info("{\n\"responseID\":\""+responseID+"\",\n\"sucess\":"+depositFlag+",\n\"response\": \"Deposit requests sent to "+repoStrings+"\"\n}");
 		
-		return "{\"sucess\":"+depositFlag+",\"response\": \"Deposit requests sent to "+repoStrings+"\"}";
+		return "{\n\"responseID\":\""+responseID+"\",\n\"sucess\":"+depositFlag+",\n\"response\": \"Deposit requests sent to "+repoStrings+"\"\n}";
 	}
 	
 	public String getBaseRoutingKeyForRepo(String repoName){

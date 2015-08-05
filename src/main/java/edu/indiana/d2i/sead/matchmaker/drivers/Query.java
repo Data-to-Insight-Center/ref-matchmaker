@@ -4,12 +4,13 @@ import edu.indiana.d2i.sead.matchmaker.service.messaging.MatchmakerENV;
 
 public class Query extends MetaDriver {
 
-	public Query(MatchmakerENV env, String message){
-		super(env, message);
+	public Query(MatchmakerENV env, String message,String responseID){
+		super(env, message,responseID);
 	}
 	
 	public String exec() {
-		return "{sucess:true,response:"+candidateList.CandidateList() +"}";
+		System.out.println("responseID="+responseID);
+		return "{\n\"responseID\":\""+responseID+"\",\n\"sucess\":"+true+",\n\"response\":"+candidateList.CandidateList() +"\n}"; 
 	} 
 
 	

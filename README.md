@@ -133,7 +133,8 @@ Output: {"A":{"weight":0,"priority":1},"B":{"weight":2,"priority":1},"D":{"weigh
 {				
   "@context": "http://schema.org/",				
   "@type": "DataDownload",				
-  "name": "Debris Flow Flume",				
+  "name": "Debris Flow Flume",
+  "ROID": "http://sample-roid",				
   "description": "A 4-meter diameter, 80-cm wide rotating debris flow flume was constructed at the University of California Richmond Field Station for studying large-scale granular flow phenomena. This dataset covers the experiments conducted in 2007 and 2008, where the primary goal was to study rates and mechanisms of bedrock erosion by debris flows.",				
   "sourceOrganization": "Columbia University",  				
   "author": {				
@@ -330,6 +331,7 @@ Development Guideline For External Components (PDT and Repositories)
 Matchmaker sends request to external components with the following schema:
 ~~~
 {
+	"requestID":"String",
 	"responseKey": "String",
 	"request":{
 			"operation" : "String", 
@@ -340,13 +342,14 @@ Matchmaker sends request to external components with the following schema:
 and expect to have response from external components with the following schema:
 ~~~
 {
+	"responseID":"String",
 	"success": boolean,
 	"message" : "object"
 }
 ~~~
 To be more specific, the matchmaker,
 1) queries the PDT using "query" operation and expects the PDT to return an JSON-LD (described as an object in the schema) as a value to the message attribute.
-and 2) deposit to repository using "deposit" operation and expects a repository to return in the message an JSON object with the following schema:
+and 2) deposit to repository using "deposit" operation and expects a repository to return in the message an JSON object with the following schema (under discussion):
 ~~~
 "message":{"status" :"String"}
 "message":{"status" :"String","doi" :"String"}

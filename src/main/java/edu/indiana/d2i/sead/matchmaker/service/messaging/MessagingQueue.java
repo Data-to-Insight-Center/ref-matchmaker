@@ -87,8 +87,9 @@ public class MessagingQueue {
 			
 			boolean durable = true;
 			this.channel.exchangeDeclare(this.ExchangeName, "direct", durable);
-			this.channel.queueDeclare(this.QueueName, durable,false,false,null);
+			//this.channel.queueDeclare(this.QueueName, durable,false,true,null);
 			this.channel.queueUnbind(this.QueueName, this.ExchangeName, this.RoutingKey);
+			this.channel.queueDelete(this.QueueName, false, true);
 
 		}
 		private void abortChannel(){
@@ -164,8 +165,9 @@ public class MessagingQueue {
 			
 			boolean durable = true;
 			this.channel.exchangeDeclare(this.ExchangeName, "direct", durable);
-			this.channel.queueDeclare(this.QueueName, durable,false,false,null);
+			//this.channel.queueDeclare(this.QueueName, durable,false,false,null);
 			this.channel.queueUnbind(this.QueueName, this.ExchangeName, this.RoutingKey);
+			this.channel.queueDelete(this.QueueName, false, true);
 
 		}
 		private void abortChannel(){

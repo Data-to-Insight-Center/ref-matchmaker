@@ -87,6 +87,7 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 					
 					
 					String ResponseRoutingKey=requestMessageJsonNode.get("responseKey").asText();
+					String responseID=ResponseRoutingKey;
 					JsonNode request=requestMessageJsonNode.get("request");
 					log.info("[Matchmaker server: Request] "+request);
 					log.info("[Matchmaker server: Message Response Routing Key] "+ResponseRoutingKey);
@@ -94,7 +95,7 @@ public class SynchronizedReceiverRunnable  implements Runnable  {
 					//Perform Service Logic
 					String response=null;
 					try{
-						response=this.mmOperations.exec(env, request);
+						response=this.mmOperations.exec(env, request, responseID);
 					}catch(Exception e){
 						response=PROCESSING_ERROR_STRING;
 						log.info("[Matchmaker server: Processing Error] "+e.toString());

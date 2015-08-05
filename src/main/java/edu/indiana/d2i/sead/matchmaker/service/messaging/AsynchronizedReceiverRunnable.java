@@ -94,7 +94,7 @@ public class AsynchronizedReceiverRunnable  implements Runnable  {
 					//Perform Service Logic
 					String result=null;
 					try{
-						result=this.mmOperations.exec(env, request);
+						result=this.mmOperations.exec(env, request, null);
 						log.info("[Matchmaker server: Async result] "+result);
 						
 					}catch(Exception e){

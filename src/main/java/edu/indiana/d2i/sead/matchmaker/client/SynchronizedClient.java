@@ -77,11 +77,13 @@ public class SynchronizedClient {
 		
 		String ResponseRoutingKey=UUID.randomUUID().toString();
 		String request=JosonRequest.toString();
+		String temporaryQueueBase=ResponseRoutingKey;
+		this.msgconf.setBaseQueueName(temporaryQueueBase);
 		try {
 			//Bind response exchange-queue-routingkey before send request.
 			new MessagingQueue().new QueueBind(this.msgconf, this.msgconf.getResponseExchangeName(), this.msgconf.getResponseQueueName(), ResponseRoutingKey);
 			//send message
-			this.sender.sendMessage("{\"responseKey\":\""+ResponseRoutingKey+"\",\"request\":"+request+"}");
+			this.sender.sendMessage("{\"requestID\":\""+ResponseRoutingKey+"\",\"responseKey\":\""+ResponseRoutingKey+"\",\"request\":"+request+"}");
 			return ResponseRoutingKey;
 		} catch (ShutdownSignalException e) {
 			// TODO Auto-generated catch block
@@ -103,11 +105,13 @@ public class SynchronizedClient {
 	public String sendRequest(String request){
 		//TODO: Validate Message Format
     	String ResponseRoutingKey=UUID.randomUUID().toString();
+    	String temporaryQueueBase=ResponseRoutingKey;
+		this.msgconf.setBaseQueueName(temporaryQueueBase);
 		try {
 			//Bind response exchange-queue-routingkey before send request.
 			new MessagingQueue().new QueueBind(this.msgconf, this.msgconf.getResponseExchangeName(), this.msgconf.getResponseQueueName(), ResponseRoutingKey);
 			//send message
-			this.sender.sendMessage("{\"responseKey\":\""+ResponseRoutingKey+"\",\"request\":"+request+"}");
+			this.sender.sendMessage("{\"requestID\":\""+ResponseRoutingKey+"\",\"responseKey\":\""+ResponseRoutingKey+"\",\"request\":"+request+"}");
 			return ResponseRoutingKey;
 		} catch (ShutdownSignalException e) {
 			// TODO Auto-generated catch block
@@ -134,12 +138,14 @@ public class SynchronizedClient {
 		try {
 			JsonNode rootNode = mapper.readTree(RequestFile);
 			String ResponseRoutingKey=UUID.randomUUID().toString();
+			String temporaryQueueBase=ResponseRoutingKey;
+			this.msgconf.setBaseQueueName(temporaryQueueBase);
 			String request=rootNode.toString();
 			try {
 				//Bind response exchange-queue-routingkey before send request.
 				new MessagingQueue().new QueueBind(this.msgconf, this.msgconf.getResponseExchangeName(), this.msgconf.getResponseQueueName(), ResponseRoutingKey);
 				//send message
-				this.sender.sendMessage("{\"responseKey\":\""+ResponseRoutingKey+"\",\"request\":"+request+"}");
+				this.sender.sendMessage("{\"requestID\":\""+ResponseRoutingKey+"\",\"responseKey\":\""+ResponseRoutingKey+"\",\"request\":"+request+"}");
 				return ResponseRoutingKey;
 			} catch (ShutdownSignalException e) {
 				// TODO Auto-generated catch block
@@ -174,6 +180,8 @@ public class SynchronizedClient {
 		
 		try {
 			this.msgconf.setResponseRoutingKey(ResponseRoutingKey);
+			String temporaryQueueBase=ResponseRoutingKey;
+			this.msgconf.setBaseQueueName(temporaryQueueBase);
 			this.receiver=new Receiver(this.msgconf,MessagingOperationTypes.RECEIVE_RESPONSE);
 			//System.out.println(msgconf.getResponseExchangeName()+":"+msgconf.getResponseQueueName()+":"+msgconf.getResponseRoutingKey());
 			String response=this.receiver.getMessage();
