@@ -53,14 +53,14 @@ public class MessagingDaemons  {
 		this.SyncMessagingDeamons=new Thread[numOfSyncMessagingDaemons];
 		this.AsyncMessagingDeamons=new Thread[numOfAsyncMessagingDaemons];
 		
-		SynchronizedReceiverRunnable qsgrr=new SynchronizedReceiverRunnable(msgconf, env);
-	    for (int i = 0; i < this.numOfSyncMessagingDaemons; i++) {
+		for (int i = 0; i < this.numOfSyncMessagingDaemons; i++) {
+			SynchronizedReceiverRunnable qsgrr=new SynchronizedReceiverRunnable(msgconf.clone(), env);
 			this.SyncMessagingDeamons[i]= new Thread(qsgrr);
 		}
 	    
-	    AsynchronizedReceiverRunnable asgrr=new AsynchronizedReceiverRunnable(msgconf, env);
 	    for (int i = 0; i < this.numOfAsyncMessagingDaemons; i++) {
-			this.AsyncMessagingDeamons[i]= new Thread(asgrr);
+	    	AsynchronizedReceiverRunnable asgrr=new AsynchronizedReceiverRunnable(msgconf.clone(), env);
+		    this.AsyncMessagingDeamons[i]= new Thread(asgrr);
 		}
 	    
 	    

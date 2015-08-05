@@ -96,6 +96,10 @@ public class MessagingConfig {
 		this.setMessagingRetryThreshold(msgconf.getMessagingRetryThreshold());
 	};
 	
+	public MessagingConfig clone(){
+		return new MessagingConfig(this);
+	};
+	
 	public void	setUsername(String Username){
 		this.Username=Username;
 	};
